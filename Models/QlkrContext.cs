@@ -35,6 +35,8 @@ public partial class QlkrContext : DbContext
 
     public virtual DbSet<Service> Services { get; set; }
 
+    public virtual DbSet<ServiceType> ServiceTypes { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=KHANH-LAPTOP;Database=QLKR;Integrated Security=true;Encrypt=true;TrustServerCertificate=true;");
@@ -134,29 +136,49 @@ public partial class QlkrContext : DbContext
             entity.HasKey(e => e.EmployeeId).HasName("PK__Employee__C52E0BA81B86A6C3");
 
             entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
+            entity.Property(e => e.Avatar)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.ClinicId).HasColumnName("clinic_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("Created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(255)
+                .HasColumnName("Created_by");
+            entity.Property(e => e.EmployeeAddress)
+                .HasMaxLength(255)
+                .HasColumnName("employee_address");
             entity.Property(e => e.EmployeeEmail)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("employee_email");
             entity.Property(e => e.EmployeeName)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("employee_name");
+            entity.Property(e => e.EmployeePassword)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("employee_password");
             entity.Property(e => e.EmployeePhone)
                 .HasMaxLength(15)
                 .IsUnicode(false)
                 .HasColumnName("employee_phone");
+            entity.Property(e => e.LastFailedLoginAttempt).HasColumnType("datetime");
             entity.Property(e => e.RoleId).HasColumnName("Role_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("Updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(255)
+                .HasColumnName("Updated_by");
 
             entity.HasOne(d => d.Clinic).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.ClinicId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Employees__clini__4D94879B");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.RoleId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Employees_Role");
         });
 
@@ -255,13 +277,34 @@ public partial class QlkrContext : DbContext
             entity.HasKey(e => e.ServiceId).HasName("PK__Services__3E0DB8AFC011F21F");
 
             entity.Property(e => e.ServiceId).HasColumnName("service_id");
-            entity.Property(e => e.ServiceFee)
-                .HasColumnType("decimal(10, 2)")
-                .HasColumnName("service_fee");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("Created_at");
+            entity.Property(e => e.CreatedBy).HasColumnName("Created_by");
             entity.Property(e => e.ServiceName)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("service_name");
+            entity.Property(e => e.ServicePrice).HasColumnName("service_price");
+            entity.Property(e => e.ServiceStatus).HasColumnName("service_status");
+            entity.Property(e => e.ServiceTypeId).HasColumnName("Service_type_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("Updated_at");
+            entity.Property(e => e.UpdatedBy).HasColumnName("Updated_by");
+
+            entity.HasOne(d => d.ServiceType).WithMany(p => p.Services)
+                .HasForeignKey(d => d.ServiceTypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Services_Services");
+        });
+
+        modelBuilder.Entity<ServiceType>(entity =>
+        {
+            entity.ToTable("ServiceType");
+
+            entity.Property(e => e.ServiceTypeId).HasColumnName("Service_type_id");
+            entity.Property(e => e.Name).HasMaxLength(255);
         });
 
         OnModelCreatingPartial(modelBuilder);

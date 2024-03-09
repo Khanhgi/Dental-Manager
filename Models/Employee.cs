@@ -7,19 +7,39 @@ public partial class Employee
 {
     public int EmployeeId { get; set; }
 
-    public string EmployeeName { get; set; } = null!;
+    public string? EmployeeName { get; set; }
 
-    public string EmployeeEmail { get; set; } = null!;
+    public string? EmployeePassword { get; set; }
 
-    public string EmployeePhone { get; set; } = null!;
+    public string? EmployeeEmail { get; set; }
 
-    public bool IsDeleted { get; set; }
+    public string? EmployeePhone { get; set; }
 
-    public int RoleId { get; set; }
+    public string? EmployeeAddress { get; set; }
 
-    public int ClinicId { get; set; }
+    public string? Avatar { get; set; }
 
-    public virtual Clinic Clinic { get; set; } = null!;
+    public DateTime? CreatedAt { get; set; }
 
-    public virtual Role Role { get; set; } = null!;
+    public DateTime? UpdatedAt { get; set; }
+
+    public string? CreatedBy { get; set; }
+
+    public string? UpdatedBy { get; set; }
+
+    public bool? Status { get; set; }
+
+    public bool? IsDeleted { get; set; }
+
+    public int? RoleId { get; set; }
+
+    public int? ClinicId { get; set; }
+
+    public int? FailedLoginAttempt { get; set; }
+
+    public DateTime? LastFailedLoginAttempt { get; set; }
+
+    public virtual Clinic? Clinic { get; set; }
+
+    public virtual Role? Role { get; set; }
 }
