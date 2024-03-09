@@ -26,7 +26,7 @@ namespace DoAnT4n.Services
             }).Cast<object>().ToList();
         }
 
-        public async Task<object> CreateBranch(Clinic createModel)
+        public async Task<object> CreateClinic(Clinic createModel)
         {
             try
             {
