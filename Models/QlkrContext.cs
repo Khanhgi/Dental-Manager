@@ -117,6 +117,7 @@ public partial class QlkrContext : DbContext
             entity.HasKey(e => e.DoctorId).HasName("PK__Doctors__F399356428CC9F0C");
 
             entity.Property(e => e.DoctorId).HasColumnName("doctor_id");
+            entity.Property(e => e.ClinicId).HasColumnName("clinic_id");
             entity.Property(e => e.DoctorName)
                 .HasMaxLength(255)
                 .HasColumnName("doctor_name");
@@ -124,6 +125,11 @@ public partial class QlkrContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("doctor_specialty");
             entity.Property(e => e.RoleId).HasColumnName("Role_id");
+
+            entity.HasOne(d => d.Clinic).WithMany(p => p.Doctors)
+                .HasForeignKey(d => d.ClinicId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Doctors_Clinics");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Doctors)
                 .HasForeignKey(d => d.RoleId)

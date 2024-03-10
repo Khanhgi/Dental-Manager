@@ -9,11 +9,17 @@ public partial class Doctor
 
     public int RoleId { get; set; }
 
-    public string DoctorName { get; set; } = null!;
+    public int ClinicId { get; set; }
 
-    public string DoctorSpecialty { get; set; } = null!;
+    public bool IsDeleted { get; set; }
+
+    public string? DoctorName { get; set; }
+
+    public string? DoctorSpecialty { get; set; }
 
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+
+    public virtual Clinic Clinic { get; set; } = null!;
 
     public virtual Role Role { get; set; } = null!;
 }

@@ -7,13 +7,15 @@ public partial class Clinic
 {
     public int ClinicId { get; set; }
 
-    public string ClinicName { get; set; } = null!;
+    public string? ClinicName { get; set; }
 
-    public string ClinicAddress { get; set; } = null!;
+    public string? ClinicAddress { get; set; }
 
-    public string ClinicPhone { get; set; } = null!;
+    public string? ClinicPhone { get; set; }
 
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+
+    public virtual ICollection<Doctor> Doctors { get; set; } = new List<Doctor>();
 
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 }

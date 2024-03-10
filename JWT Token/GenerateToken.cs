@@ -43,5 +43,52 @@ namespace Dental_Manager.JWT_Token
 
             return jwt;
         }
+
+        public string CreateToken(Doctor doctor)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, doctor.DoctorName ?? string.Empty),
+                new Claim(ClaimTypes.Role, doctor.RoleId.ToString()),
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GenerateRandomKeys(512)));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds
+            );
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
+        }
+
+        public string CreateToken(Patient patient)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, patient.PatientName ?? string.Empty),
+                new Claim(ClaimTypes.Email, patient.PatientEmail ?? string.Empty),
+                new Claim(ClaimTypes.Role, patient.RoleId.ToString()),
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GenerateRandomKeys(512)));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds
+            );
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
+        }
     }
 }
