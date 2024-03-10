@@ -59,7 +59,7 @@ namespace DoAnT4.Services
 
 
         //Tìm kiếm nhân viên
-        public async Task<List<object>> searchEmployee(string keyword)
+        public async Task<List<object>> SearchEmployee(string keyword)
         {
             var employees = await _context.Employees
                 .Include(p => p.Clinic)
