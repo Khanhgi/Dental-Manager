@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<QlkrContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("QLKR")));
 
+//Test
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
