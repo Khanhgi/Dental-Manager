@@ -1,5 +1,5 @@
 ﻿using Dental_Manager.JWT_Token;
-using DoAnT4.Services;
+using Dental_Manager.Services;
 
 namespace DoAnT4n.Services
 {
@@ -10,6 +10,9 @@ namespace DoAnT4n.Services
             services.AddHttpContextAccessor();
             services.AddScoped<EmployeeServices>();
             services.AddScoped<GenerateToken>();
+            services.AddScoped<LoginEmployeeServices>();
+            services.AddScoped<DoctorServices>();
+            services.AddScoped<ClinicServices>();
             return services;
         }
     }

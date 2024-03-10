@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DoAnT4.Services
+namespace Dental_Manager.Services
 {
     public class EmployeeServices
     {

@@ -1,13 +1,12 @@
 ﻿using Dental_Manager.Models;
 using Dental_Manager.Services;
-using DoAnT4.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DoAnT4n.APIAdminController
 {
     [ApiController]
-    [Route("api/[controller")]
+    [Route("api/[controller]")]
     public class EmployeeAPIController : Controller
     {
         private readonly QlkrContext _context;
