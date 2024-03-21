@@ -19,9 +19,11 @@ public partial class QlkrContext : DbContext
 
     public virtual DbSet<Clinic> Clinics { get; set; }
 
-    public virtual DbSet<Doctor> Doctors { get; set; }
-
     public virtual DbSet<Employee> Employees { get; set; }
+
+    public virtual DbSet<EmployeeSchedule> EmployeeSchedules { get; set; }
+
+    public virtual DbSet<EmployeeScheduleDetail> EmployeeScheduleDetails { get; set; }
 
     public virtual DbSet<MedicalHistory> MedicalHistories { get; set; }
 
@@ -38,7 +40,7 @@ public partial class QlkrContext : DbContext
     public virtual DbSet<ServiceType> ServiceTypes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=KHANH-LAPTOP;Database=QLKR;Integrated Security=true;Encrypt=true;TrustServerCertificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -55,7 +57,7 @@ public partial class QlkrContext : DbContext
                 .HasColumnName("appointment_date");
             entity.Property(e => e.AppointmentTime).HasColumnName("appointment_time");
             entity.Property(e => e.ClinicId).HasColumnName("clinic_id");
-            entity.Property(e => e.DoctorId).HasColumnName("doctor_id");
+            entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
             entity.Property(e => e.PatientId).HasColumnName("patient_id");
 
             entity.HasOne(d => d.Clinic).WithMany(p => p.Appointments)
@@ -63,10 +65,10 @@ public partial class QlkrContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Appointme__clini__48CFD27E");
 
-            entity.HasOne(d => d.Doctor).WithMany(p => p.Appointments)
-                .HasForeignKey(d => d.DoctorId)
+            entity.HasOne(d => d.Employee).WithMany(p => p.Appointments)
+                .HasForeignKey(d => d.EmployeeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Appointme__docto__49C3F6B7");
+                .HasConstraintName("FK_Appointment_Employees");
 
             entity.HasOne(d => d.Patient).WithMany(p => p.Appointments)
                 .HasForeignKey(d => d.PatientId)
@@ -110,31 +112,6 @@ public partial class QlkrContext : DbContext
                 .HasMaxLength(15)
                 .IsUnicode(false)
                 .HasColumnName("clinic_phone");
-        });
-
-        modelBuilder.Entity<Doctor>(entity =>
-        {
-            entity.HasKey(e => e.DoctorId).HasName("PK__Doctors__F399356428CC9F0C");
-
-            entity.Property(e => e.DoctorId).HasColumnName("doctor_id");
-            entity.Property(e => e.ClinicId).HasColumnName("clinic_id");
-            entity.Property(e => e.DoctorName)
-                .HasMaxLength(255)
-                .HasColumnName("doctor_name");
-            entity.Property(e => e.DoctorSpecialty)
-                .HasMaxLength(255)
-                .HasColumnName("doctor_specialty");
-            entity.Property(e => e.RoleId).HasColumnName("Role_id");
-
-            entity.HasOne(d => d.Clinic).WithMany(p => p.Doctors)
-                .HasForeignKey(d => d.ClinicId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Doctors_Clinics");
-
-            entity.HasOne(d => d.Role).WithMany(p => p.Doctors)
-                .HasForeignKey(d => d.RoleId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Doctors_Role");
         });
 
         modelBuilder.Entity<Employee>(entity =>
@@ -186,6 +163,34 @@ public partial class QlkrContext : DbContext
             entity.HasOne(d => d.Role).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.RoleId)
                 .HasConstraintName("FK_Employees_Role");
+        });
+
+        modelBuilder.Entity<EmployeeSchedule>(entity =>
+        {
+            entity.ToTable("Employee_Schedule");
+
+            entity.Property(e => e.EmployeeScheduleId).HasColumnName("Employee_Schedule_id");
+        });
+
+        modelBuilder.Entity<EmployeeScheduleDetail>(entity =>
+        {
+            entity.HasKey(e => new { e.EmployeeScheduleId, e.EmployeeId });
+
+            entity.ToTable("Employee_Schedule_Detail");
+
+            entity.Property(e => e.EmployeeScheduleId).HasColumnName("Employee_Schedule_id");
+            entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
+            entity.Property(e => e.Date).HasColumnType("date");
+
+            entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeScheduleDetails)
+                .HasForeignKey(d => d.EmployeeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Employee_Schedule_Detail_Employees");
+
+            entity.HasOne(d => d.EmployeeSchedule).WithMany(p => p.EmployeeScheduleDetails)
+                .HasForeignKey(d => d.EmployeeScheduleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Employee_Schedule_Detail_Employee_Schedule");
         });
 
         modelBuilder.Entity<MedicalHistory>(entity =>

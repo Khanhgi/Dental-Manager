@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Dental_Manager.AdminControllers
 {
@@ -26,7 +27,7 @@ namespace Dental_Manager.AdminControllers
             var clinics = _context.Clinics.ToList();
             ViewBag.Roles = new SelectList(roles, "RoleId", "Name");
             ViewBag.Clinics = new SelectList(clinics, "ClinicId", "ClinicAddress");
-            string createdBy = HttpContext.Session.GetString("Name");
+            string createdBy = HttpContext.Session.GetString("EmployeeName");
             ViewBag.CreatedBy = createdBy;
             return View();
         }
@@ -36,7 +37,7 @@ namespace Dental_Manager.AdminControllers
         {
             var apiUrl = "https://localhost:7044/api/EmployeeAPI/register";
 
-            registerModel.CreatedBy = HttpContext.Session.GetString("Name");
+            registerModel.CreatedBy = HttpContext.Session.GetString("EmployeeName");
 
             var content = new StringContent(JsonConvert.SerializeObject(registerModel), Encoding.UTF8, "application/json");
 
@@ -83,7 +84,6 @@ namespace Dental_Manager.AdminControllers
 
                 var employee = await _context.Employees.FirstOrDefaultAsync(c => c.EmployeeName == username);
 
-                _contextAccessor.HttpContext.Session.SetString("EmployeeName", employee.EmployeeName);
                 if (employee.Avatar != null)
                 {
                     _contextAccessor.HttpContext.Session.SetString("Avatar", employee.Avatar);
@@ -134,7 +134,7 @@ namespace Dental_Manager.AdminControllers
 
                 return RedirectToAction("Login", "AdminView");
             }
-            var apiUrl = $"https://localhost:7044/api/AdminApi/delete/{employeeId}";
+            var apiUrl = $"https://localhost:7044/api/EmployeeAPI/delete/{employeeId}";
 
             var response = await _httpClient.DeleteAsync(apiUrl);
 
@@ -153,6 +153,131 @@ namespace Dental_Manager.AdminControllers
                 return RedirectToAction("Index");
             }
         }
+
+        [HttpGet]
+        public IActionResult Edit(int employeeId)
+        {
+            if (HttpContext.Session.GetString("EmployeeId") == null)
+            {
+                return RedirectToAction("Login", "Staff"); //////////////////////////
+            }
+            var employee = _context.Employees
+              .Include(s => s.EmployeeScheduleDetails)
+              .ThenInclude(s => s.EmployeeSchedule)
+              .FirstOrDefault(s => s.EmployeeId == employeeId);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            var roles = _context.Roles.ToList();
+            var clinics = _context.Clinics.ToList();
+
+            ViewBag.Roles = new SelectList(roles, "RoleId", "Name");
+            ViewBag.Clinics = new SelectList(clinics, "ClinicId", "ClinicAddress");
+
+            return View(employee);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int employeeId, Employee updateModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                var roles = _context.Roles.ToList();
+                var clinics = _context.Clinics.ToList();
+
+                ViewBag.Roles = new SelectList(roles, "RoleId", "Name");
+                ViewBag.Clinics = new SelectList(clinics, "ClinicId", "ClinicAddress");
+
+                return View(updateModel);
+            }
+
+            var phoneRegex = new Regex(@"^(03|05|07|08|09|01[2|6|8|9])(?!84)[0-9]{8}$");
+            if (!phoneRegex.IsMatch(updateModel.EmployeePhone) || updateModel.EmployeePhone.Length > 10)
+            {
+                ModelState.AddModelError("EmployeePhone", "Invalid Phone number");
+                return View(updateModel);
+            }
+            updateModel.Status = Request.Form["Status"] == "true";
+
+            var apiUrl = $"https://localhost:7044/api/EmployeeAPI/update/{employeeId}";
+
+            var json = JsonConvert.SerializeObject(updateModel);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PutAsync(apiUrl, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    var updatedEmployee = await _context.Employees.FirstOrDefaultAsync(s => s.EmployeeId == employeeId);
+                    if (updatedEmployee != null)
+                    {
+
+                        string editorName = HttpContext.Session.GetString("EmployeeName");
+                        updatedEmployee.UpdatedBy = editorName;
+
+                        _context.Entry(updatedEmployee).State = EntityState.Modified;
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "An error occurred while saving the editor's name: " + ex.Message);
+                }
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine("API Response Content: " + responseContent);
+
+                var errorResponse = JsonConvert.DeserializeObject<object>(responseContent);
+                var roles = _context.Roles.ToList();
+                var clinics = _context.Clinics.ToList();
+
+                ViewBag.Roles = new SelectList(roles, "RoleId", "Name");
+                ViewBag.Clinics = new SelectList(clinics, "ClinicId", "ClinicAddress");
+
+                ModelState.AddModelError("", errorResponse.ToString());
+                return View(updateModel);
+            }
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var apiResponse = await _httpClient.GetAsync("https://localhost:7044/api/EmployeeAPI/");
+
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                var responseContent = await apiResponse.Content.ReadAsStringAsync();
+                var employee = JsonConvert.DeserializeObject<List<Employee>>(responseContent);
+                return View(employee);
+            }
+            else
+            {
+                var employeeList= await _context.Employees
+                    .Include(s => s.Clinic)
+                    .Include(s => s.RoleId)
+                    .ToListAsync();
+                return View(employeeList);
+            }
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("EmployeeName");
+            HttpContext.Session.Remove("Avatar");
+            HttpContext.Session.Remove("Role");
+
+            HttpContext.Session.Clear();
+
+            return RedirectToAction("Index", "Home");
+        }
+
 
     }
 }

@@ -161,7 +161,6 @@ namespace Dental_Manager.Services
                 var httpContext = _contextAccessor.HttpContext;
 
                 // Lưu thông tin vào session
-                httpContext.Session.SetString("EmployeeName", employee.EmployeeName);
                 if (employee.Avatar != null)
                 {
                     httpContext.Session.SetString("Avatar", employee.Avatar);
@@ -189,7 +188,7 @@ namespace Dental_Manager.Services
                     Message = "Tên hoặc Mật khẩu không hợp lệ !",
                     Errors = new List<string>
                     {
-                        "Invalid password"
+                        "Mật khẩu không hợp lệ"
                     }
                 };
                 return new BadRequestObjectResult(invalidLoginErrorResponse);

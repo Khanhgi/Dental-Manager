@@ -101,7 +101,7 @@ namespace DoAnT4n.APIAdminController
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error deleting staff: {ex.Message}");
+                Console.Error.WriteLine($"Lỗi: {ex.Message}");
                 return new StatusCodeResult(500);
             }
         }

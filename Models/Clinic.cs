@@ -15,7 +15,5 @@ public partial class Clinic
 
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 
-    public virtual ICollection<Doctor> Doctors { get; set; } = new List<Doctor>();
-
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 }

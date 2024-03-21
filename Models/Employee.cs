@@ -39,7 +39,11 @@ public partial class Employee
 
     public DateTime? LastFailedLoginAttempt { get; set; }
 
+    public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+
     public virtual Clinic? Clinic { get; set; }
+
+    public virtual ICollection<EmployeeScheduleDetail> EmployeeScheduleDetails { get; set; } = new List<EmployeeScheduleDetail>();
 
     public virtual Role? Role { get; set; }
 }
