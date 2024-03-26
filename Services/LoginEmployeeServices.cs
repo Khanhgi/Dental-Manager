@@ -92,7 +92,7 @@ namespace Dental_Manager.Services
             var registerSuccessResponse = new
             {
                 Message = "Đăng kí thành công",
-                ClientId = newEmployee.EmployeeId,
+                EmployeeId = newEmployee.EmployeeId,
                 Role = new
                 {
                     Name = newEmployee.Role?.Name,

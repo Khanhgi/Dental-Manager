@@ -11,7 +11,7 @@ namespace DoAnT4n.Services
             services.AddScoped<EmployeeServices>();
             services.AddScoped<GenerateToken>();
             services.AddScoped<LoginEmployeeServices>();
-            services.AddScoped<DoctorServices>();
+            //services.AddScoped<DoctorServices>();
             services.AddScoped<ClinicServices>();
             return services;
         }

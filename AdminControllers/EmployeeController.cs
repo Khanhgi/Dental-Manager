@@ -105,7 +105,7 @@ namespace Dental_Manager.AdminControllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ReloadEmployee(int employeeId)
+        public async Task<IActionResult> AddEmployee(int employeeId)
         {
             var apiUrl = $"https://localhost:7044/api/EmployeeAPI/add/{employeeId}";
             var response = await _httpClient.PutAsync(apiUrl, null);
@@ -132,7 +132,7 @@ namespace Dental_Manager.AdminControllers
             {
                 HttpContext.Session.SetString("ReturnUrl", Url.Action("Delete", "Employee", new { employeeId }));
 
-                return RedirectToAction("Login", "AdminView");
+                return RedirectToAction("Login", "AdminView");/////////////////////////////////////////////////////
             }
             var apiUrl = $"https://localhost:7044/api/EmployeeAPI/delete/{employeeId}";
 
@@ -159,7 +159,7 @@ namespace Dental_Manager.AdminControllers
         {
             if (HttpContext.Session.GetString("EmployeeId") == null)
             {
-                return RedirectToAction("Login", "Staff"); //////////////////////////
+                return RedirectToAction("Login", "Staff"); ////////////////////////////////////////////////////
             }
             var employee = _context.Employees
               .Include(s => s.EmployeeScheduleDetails)
@@ -245,6 +245,25 @@ namespace Dental_Manager.AdminControllers
                 ModelState.AddModelError("", errorResponse.ToString());
                 return View(updateModel);
             }
+        }
+
+        [HttpPost]
+        public IActionResult ProcessUpload(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return Json("No file uploaded");
+            }
+
+            string fileName = Path.GetFileName(file.FileName);
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            return Json("/images/" + fileName);
         }
 
         public async Task<IActionResult> Index()
