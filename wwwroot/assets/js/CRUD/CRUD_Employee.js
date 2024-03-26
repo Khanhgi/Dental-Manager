@@ -77,22 +77,22 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-function navigateTo(action, staffId) {
-    window.location.href = `/Admin/Staff/${action}?staffId=${staffId}`;
+function navigateTo(action, employeeId) {
+    window.location.href = `/Employee/${action}?employeeId=${employeeId}`;
 }
 
-function deleteStaff(staffId) {
-    if (confirm('Are you sure you want to delete this Staff?')) {
-        navigateTo('Delete', staffId);
+function deleteStaff(employeeId) {
+    if (confirm('Are you sure you want to delete this employee?')) {
+        navigateTo('Delete', employeeId);
     }
 }
 
-function addStaff(staffId) {
-    window.location.href = `/Admin/Staff/ReloadEmployee?staffId=${staffId}`;
+function addStaff(employeeId) {
+    window.location.href = `/Admin/Staff/ReloadEmployee?employeeId=${employeeId}`;
 }
 
-function ReloaStaff(staffId) {
-    if (confirm('Are you sure you want to add this staff?')) {
-        window.location.href = `/Admin/Staff/ReloadEmployee?staffId=${staffId}`;
+function ReloaStaff(employeeId) {
+    if (confirm('Are you sure you want to add this employee?')) {
+        window.location.href = `/Admin/Staff/ReloadEmployee?employeeId=${employeeId}`;
     }
 }

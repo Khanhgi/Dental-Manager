@@ -1,5 +1,240 @@
 ﻿@model IEnumerable<Dental_Manager.Models.Employee>
 @{
     ViewData["Title"] = "Employee List";
-    Layout = "";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+
+@* <div class="wrapper-box" style="padding:7rem">
+    <div class="toolBar-control">
+        <button class="btn-create" onclick="window.location.href='/Employee/Register'">
+            Create new
+        </button>
+
+        <div class="wrap-search">
+            <form method="get" action="/Employee/SearchStaff" class="search-staff" onsubmit="return validateSearch()">
+                <div class="box-search">
+                    <input type="text" name="keyword" id="searchInput" placeholder="Search Employee ...">
+                    <button type="submit" class="btnSearch-staff" id="searchButton">Search</button>
+                </div>
+            </form>
+        </div>
+
+        <div></div>
+    </div>
+    <div class="table-infoStaff">
+        <table class="table-List">
+            <tr class="title-infoList">
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                    <input type="checkbox" id="selectAll" />
+                </th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Avatar</th>
+                <th>Status</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Created By</th>
+                <th>Updated By</th>
+                <th>Clinic</th>
+                <th>Role</th>
+                <th>Action</th>
+                <button id="deleteSelected" class="btn btn-danger">Delete Selected</button>
+
+            </tr>
+
+            <tbody class="box-tbody">
+                @if (Model != null)
+                {
+
+                    @foreach (var item in Model)
+                    {
+                        @if (item.IsDeleted == false)
+                        {
+
+                            <tr class="item-infoList">
+                                <td class="align-middle text-center">
+                                    <input type="checkbox" class="productCheckbox" data-product-id="@item.EmployeeId" />
+                                </td>
+                                <td>@item.EmployeeId</td>
+
+                                <td>@item.EmployeeName</td>
+                                <td>@item.EmployeePhone</td>
+                                <td>
+                                    <img src="@item.Avatar" alt="">
+                                </td>
+                                <td>@item.EmployeeEmail</td>
+                                <td>@item.EmployeeAddress</td>
+                                <td>
+                                    @if (item.Status == true)
+                                    {
+                                        <p style="color: green">Active</p>
+                                    }
+                                    else
+                                    {
+                                        <p style="color: red">Non-Active</p>
+                                    }
+                                </td>
+                                <td>@item.CreatedAt?.ToString("dd/MM/yyyy")</td>
+                                <td>@item.UpdatedAt?.ToString("dd/MM/yyyy")</td>
+                                <td>@item.CreatedBy</td>
+                                <td>@item.UpdatedBy</td>
+                                <td>@item.Clinic?.ClinicAddress</td>
+                                <td>@item.Role?.Name</td>
+                                <td>
+                                    <button class="button-38" role="button" onclick="navigateTo('Sendmail', @item.EmployeeId)">
+                                        sendMail
+                                    </button>
+                                    <a onclick="navigateTo('Edit', @item.EmployeeId)" role="button" class="text-secondary btn font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                                        Edit
+                                    </a>
+                                    <a onclick="deleteStaff(@item.EmployeeId)" role="button" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                                        <i class="btn-outline-primary btn fa-solid fa-x"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+
+                    }
+                }
+                else
+                {
+                    <tr style="text-align:center">
+                        <td colspan="14" style="color:Red">No products found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <h1 style="text-align:center; margin:1rem 0">Employee Is Deleted</h1>
+    <div class="table-infoStaff">
+        <table class="table-List">
+            <tr class="title-infoList">
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Avatar</th>
+                <th>Status</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Created By</th>
+                <th>Updated By</th>
+                <th>Clinic</th>
+                <th>Role</th>
+                <th>Action</th>
+            </tr>
+
+            <tbody class="box-tbody">
+                @foreach (var item in Model)
+                {
+                    @if (item.IsDeleted == true)
+                    {
+                        <tr class="item-infoList">
+                            <td>@item.EmployeeId</td>
+
+                            <td>@item.EmployeeName</td>
+                            <td>@item.EmployeePhone</td>
+                            <td>
+                                <img src="@item.Avatar" alt="">
+                            </td>
+                            <td>@item.EmployeeEmail</td>
+                            <td>@item.EmployeeAddress</td>
+                            <td>
+                                @if (item.Status == true)
+                                {
+                                    <p style="color: green">Active</p>
+                                }
+                                else
+                                {
+                                    <p style="color: red">Non-Active</p>
+                                }
+                            </td>
+                            <td>@item.CreatedAt?.ToString("dd/MM/yyyy")</td>
+                            <td>@item.UpdatedAt?.ToString("dd/MM/yyyy")</td>
+                            <td>@item.CreatedBy</td>
+                            <td>@item.UpdatedBy</td>
+                            <td>@item.Clinic?.ClinicAddress</td>
+                            <td>@item.Role?.Name</td>
+                            <td>
+                                <button class="btn-add" onclick="ReloaStaff(@item.EmployeeId)">
+                                    Add
+                                </button>
+
+                            </td>
+                        </tr>
+                    }
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script src="~/assets/js/CRUD/CRUD_Employee.js" />
+
+
+<style>
+    .button-38 {
+        background-color: #FFFFFF;
+        border: 0;
+        border-radius: .5rem;
+        box-sizing: border-box;
+        color: #111827;
+        font-family: "Inter var",ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+        font-size: .875rem;
+        font-weight: 600;
+        line-height: 1.25rem;
+        padding: .8rem 1rem;
+        border-radius: 8px;
+        text-align: center;
+        text-decoration: none #D1D5DB solid;
+        text-decoration-thickness: auto;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+
+        .button-38:hover {
+            background-color: rgb(249,250,251);
+        }
+
+        .button-38:focus {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+        }
+
+        .button-38:focus-visible {
+            box-shadow: none;
+        }
+</style> *@
+
+<table class="table table-hover table-dark">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">1</th>
+          
+        </tr>
+        <tr>
+            <th scope="row">2</th>
+   
+        </tr>
+        <tr>
+            <th scope="row">3</th>
+        </tr>
+    </tbody>
+</table>

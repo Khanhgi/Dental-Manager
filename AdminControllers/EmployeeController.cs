@@ -132,7 +132,7 @@ namespace Dental_Manager.AdminControllers
             {
                 HttpContext.Session.SetString("ReturnUrl", Url.Action("Delete", "Employee", new { employeeId }));
 
-                return RedirectToAction("Login", "AdminView");/////////////////////////////////////////////////////
+                return RedirectToAction("Index", "Employee");
             }
             var apiUrl = $"https://localhost:7044/api/EmployeeAPI/delete/{employeeId}";
 
