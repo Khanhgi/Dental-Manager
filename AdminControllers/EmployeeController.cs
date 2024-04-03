@@ -268,7 +268,7 @@ namespace Dental_Manager.AdminControllers
 
         public async Task<IActionResult> Index()
         {
-            var apiResponse = await _httpClient.GetAsync("https://localhost:7044/api/EmployeeAPI/");
+            var apiResponse = await _httpClient.GetAsync("https://localhost:7044/api/EmployeeAPI");
 
             if (apiResponse.IsSuccessStatusCode)
             {

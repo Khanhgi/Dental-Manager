@@ -98,6 +98,7 @@ namespace Dental_Manager.Services
                 l.EmployeeName,
                 l.EmployeeEmail,
                 l.EmployeePhone,
+                l.EmployeeAddress,
                 Role = new
                 {
                     Role = l.Role.RoleId,
