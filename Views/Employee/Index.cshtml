@@ -76,7 +76,7 @@
             }
     </style>
 
-    <div class="wrapper-box" style="padding:7rem">
+    <div class="wrapper-box" style="padding:1rem">
 
         <div class="toolBar-control">
             <button class="btn-create" onclick="window.location.href='/Employee/Register'">
@@ -157,14 +157,14 @@
                                     <td>@item.Clinic?.ClinicAddress</td>
                                     <td>@item.Role?.Name</td>
                                     <td>
-                                        <button class="button-38" role="button" onclick="navigateTo('Sendmail', @item.EmployeeId)">
+@*                                         <button class="button-38" role="button" onclick="navigateTo('Sendmail', @item.EmployeeId)">
                                             sendMail
-                                        </button>
-                                        <a onclick="navigateTo('Edit', @item.EmployeeId)" role="button" class="text-secondary btn font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                                        </button> *@
+                                        <a onclick="navigateTo('Edit', @item.EmployeeId)" role="button" class="button-38" data-toggle="tooltip" data-original-title="Edit user">
                                             Edit
                                         </a>
-                                        <a onclick="deleteStaff(@item.EmployeeId)" role="button" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                                            <i class="btn-outline-primary btn fa-solid fa-x"></i>
+                                        <a onclick="deleteStaff(@item.EmployeeId)" role="button" @* class="text-secondary font-weight-bold text-xs" *@ data-toggle="tooltip" data-original-title="Edit user">
+                                    <i class="button-38 fa-solid fa-x"></i>
                                         </a>
                                     </td>
                                 </tr>

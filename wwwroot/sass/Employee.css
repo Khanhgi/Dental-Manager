@@ -15,15 +15,16 @@
   max-width: 60rem;
   width: 100%;
 }
-.wrapper-box .toolBar-control .wrap-search .search-staff {
-  border: 0.1rem solid #dbdbdb;
-  border-radius: 5rem;
-  overflow: hidden;
-  padding: 0.7rem 0;
-  position: relative;
-}
+    .wrapper-box .toolBar-control .wrap-search .search-staff {
+        border: 0.1rem solid #dbdbdb;
+        border-radius: 5rem;
+        overflow: hidden;
+        padding: 0.2rem 0;
+        position: relative;
+        width: 60%;
+    }
 .wrapper-box .toolBar-control .wrap-search .search-staff .box-search {
-  padding-left: 1.6rem;
+  padding-left: 1rem;
 }
 .wrapper-box .toolBar-control .wrap-search .search-staff .box-search input {
   width: 83%;
@@ -33,7 +34,7 @@
   right: 0;
   top: 0;
   bottom: 0;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
   background: #542afb;
   color: #fff;
   cursor: pointer;
@@ -65,7 +66,7 @@
 .wrapper-box .table-infoStaff .table-List .title-infoList {
   text-align: center;
   background: #008678;
-  font-size: 1.5rem;
+  font-size: 1rem;
   color: #fff;
 }
 .wrapper-box .table-infoStaff .table-List .title-infoList td {
@@ -75,11 +76,11 @@
   text-align: center;
 }
 .wrapper-box .table-infoStaff .table-List .item-infoList td {
-  font-size: 1.4rem;
+  font-size: 1rem;
 }
 .wrapper-box .table-infoStaff .table-List .item-infoList td img {
-  width: 5rem;
-  height: 5rem;
+  width: 3rem;
+  height: 3rem;
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 5rem;
