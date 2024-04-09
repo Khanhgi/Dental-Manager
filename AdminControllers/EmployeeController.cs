@@ -35,7 +35,7 @@ namespace Dental_Manager.AdminControllers
         [HttpPost]
         public async Task<IActionResult> Register(Employee registerModel)
         {
-            var apiUrl = "https://localhost:7044/api/EmployeeAPI/register";
+            var apiUrl = $"https://localhost:7044/api/EmployeeAPI/register";
 
             registerModel.CreatedBy = HttpContext.Session.GetString("EmployeeName");
 
@@ -92,7 +92,7 @@ namespace Dental_Manager.AdminControllers
                 _contextAccessor.HttpContext.Session.SetString("Role", employee.RoleId.ToString());
                 _contextAccessor.HttpContext.Session.SetString("EmployeeName", employee.EmployeeName);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Employee");
             }
             else
             {
