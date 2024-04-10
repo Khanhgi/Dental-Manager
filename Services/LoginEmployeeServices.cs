@@ -102,6 +102,7 @@ namespace Dental_Manager.Services
             return new OkObjectResult(registerSuccessResponse);
         }
 
+
         public async Task<IActionResult> LoginEmployee(Employee loginModel)
         {
             if (loginModel == null || string.IsNullOrWhiteSpace(loginModel.EmployeeName) || string.IsNullOrWhiteSpace(loginModel.EmployeePassword))
@@ -124,7 +125,6 @@ namespace Dental_Manager.Services
                 return new BadRequestObjectResult(loginErrorResponse);
             }
 
-            // Kiểm tra nếu tài khoản chưa được kích hoạt
             if (employee.Status == false)
             {
                 var inactiveAccountResponse = new

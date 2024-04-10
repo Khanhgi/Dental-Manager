@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -14,11 +15,16 @@ namespace Dental_Manager.AdminControllers
         private readonly QlkrContext _context;
         private readonly IHttpContextAccessor _contextAccessor;
        
+        public static string ApiUrl()
+        {
+            return "https://localhost:7044/api/EmployeeAPI/";
+        }
         public EmployeeController(QlkrContext context, IHttpContextAccessor contextAccessor)
         {
             _httpClient = new HttpClient();
             _context = context;
             _contextAccessor = contextAccessor;
+            _httpClient.BaseAddress = new Uri(ApiUrl());    
         }
 
         public IActionResult Register()
@@ -82,17 +88,18 @@ namespace Dental_Manager.AdminControllers
 
                 _contextAccessor.HttpContext.Session.SetString("AccessToken", token);
 
-                var employee = await _context.Employees.FirstOrDefaultAsync(c => c.EmployeeName == username);
+                var staff = await _context.Employees.FirstOrDefaultAsync(c => c.EmployeeName == username);
 
-                if (employee.Avatar != null)
+                _contextAccessor.HttpContext.Session.SetString("Username", staff.EmployeeName);
+                if (staff.Avatar != null)
                 {
-                    _contextAccessor.HttpContext.Session.SetString("Avatar", employee.Avatar);
+                    _contextAccessor.HttpContext.Session.SetString("Avatar", staff.Avatar);
                 }
-                _contextAccessor.HttpContext.Session.SetString("EmployeeId", employee.EmployeeId.ToString());
-                _contextAccessor.HttpContext.Session.SetString("Role", employee.RoleId.ToString());
-                _contextAccessor.HttpContext.Session.SetString("EmployeeName", employee.EmployeeName);
+                _contextAccessor.HttpContext.Session.SetString("UserId", staff.EmployeeId.ToString());
+                _contextAccessor.HttpContext.Session.SetString("Role", staff.RoleId.ToString());
+                _contextAccessor.HttpContext.Session.SetString("Name", staff.EmployeeName);
 
-                return RedirectToAction("Index", "Employee");
+                return RedirectToAction("Index1", "Employee");
             }
             else
             {
