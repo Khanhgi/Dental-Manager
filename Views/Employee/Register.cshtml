@@ -1,93 +1,161 @@
 ﻿@model Dental_Manager.Models.Employee
+@using Microsoft.AspNetCore.Http
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous">
-    <link href="~/css/Regform.css" rel="stylesheet" />
-</head>
-<body>
-    <div class="wrapper">
-        <div class="form-box login">
-            <h2>Login</h2>
-            <form asp-action="Login" method="post">
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+    <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="d-flex align-items-center justify-content-center w-100">
+            <div class="row justify-content-center w-100">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card mb-0">
+                        <div class="card-body d-flex flex-column align-items-center">
+                            <a href="" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                                <img src="~/assets/img/apple-icon.png" width="50" alt="">
+                            </a>
+                            @if (!ViewData.ModelState.IsValid)
+                            {
+                                <div class="text-danger">
+                                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                    {
+                                        <p>@error.ErrorMessage</p>
+                                    }
+                                </div>
+                            }
+                            <p class="text-center">Add Employee</p>
+                            <div class="img-wrap" style="align-items: center; display: flex; justify-content: center;">
+                                <input asp-for="Avatar" id="Thumbnail" hidden class="form-control" />
+                                <input type="file" name="fileUpload" id="fileUpload" accept="image/*" style="display:none;" />
+                                <img style="width: 100px; border-radius: 50%; height: 100px; object-fit: cover" class="wrapper-img" src="~/images/img.jpg" id="pictureUpload" />
+                            </div>
+                            <form asp-action="Register">
+                                <div style="display:flex">
 
-                <div class="input-box">
-                    <span class="icon" asp-validation-for="EmployeeName"></span>
-                    <input asp-for="EmployeeName" type="text" required>
-                    <label>Employee Name</label>
+                                    <div style="flex:1; margin:0 2rem">
+                                        <div class="mb-3">
+                                            <label for="exampleInputtext1" class="form-label">Name</label>
+                                            <input asp-for="EmployeeName" class="form-control" />
+                                            <span asp-validation-for="EmployeeName" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="Password" class="form-label">Password</label>
+                                            <input asp-for="EmployeePassword" class="form-control" type="password" />
+                                            <span asp-validation-for="EmployeeName" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="phone" class="form-label">Phone</label>
+                                            <input asp-for="EmployeePhone" class="form-control" />
+                                            <span asp-validation-for="EmployeeName" class="text-danger"></span>
+                                            <span asp-validation-for="EmployeePhone" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="d-flex align-items-center">
+                                                <label for="Avatar" class="form-label">Avatar</label>
+                                                <input asp-for="Avatar" class="form-control flex-grow-1 visually-hidden" />
+                                                <input type="button" id="btnUpload" value="Chọn ảnh" class="btn btn-primary rounded-2 ml-2" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style="flex:1; margin:0 2rem">
+                                        <div class="mb-4">
+                                            <label for="Address" class="form-label">Address</label>
+                                            <input asp-for="EmployeeAddress" class="form-control" />
+                                            <span asp-validation-for="EmployeeName" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="Email" class="form-label">Email</label>
+                                            <input asp-for="EmployeeEmail" class="form-control" />
+                                            <span asp-validation-for="EmployeeName" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="Status" class="form-label">Status</label>
+                                            <div class="radio-buttons" style="display:flex; justify-content:space-around">
+                                                <label class="form-check-label">
+                                                    <input type="radio" asp-for="Status" class="form-check-input" value="true" checked /> Active
+                                                </label>
+                                                <label class="form-check-label">
+                                                    <input type="radio" asp-for="Status" class="form-check-input" value="false" /> Non-Active
+                                                </label>
+                                                <span class="error-indicator"></span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="RoleId" class="form-label">Role</label>
+                                            @Html.DropDownList("RoleId", (SelectList)ViewBag.Roles, "Select a role", new { @class = "form-control" })
+                                            <span asp-validation-for="RoleId" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="ClinicId" class="form-label">Clinic</label>
+                                            @Html.DropDownList("ClinicId", (SelectList)ViewBag.Clinics, "Select a clinic", new { @class = "form-control" })
+                                            <span asp-validation-for="ClinicId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="submit" value="Create" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" />
+                            </form>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="input-box">
-                    <span class="icon" asp-validation-for="EmployeePassword"></span>
-                    <input asp-for="EmployeePassword" type="password" required>
-                    <label>Password</label>
-                    <span class="text-danger" style="color: red;display: flex; justify-content: center; padding-top: 0.5em;">@ViewData["ErrorMessage"]</span>
-                </div>
-
-                <div class="remember-forgot">
-                    <label><input type="checkbox">Remember me</label>
-                    <a href="#">Forgot Password ?</a>
-                </div>
-
-                <button type="submit" class="btn">Login</button>
-
-                <div class="login-register">
-                    <p>Don't have an account ?<a href="#" class="register-link"> Register</a></p>
-                </div>
-            </form>
-        </div>
-
-        <div class="form-box register">
-            <h2>Register</h2>
-
-            <form asp-action="Register" method="post">
-
-                <div class="input-box">
-                    <span class="icon" asp-validation-for="EmployeeName"></span>
-                    <input asp-for="EmployeeName" type="text" required>
-                    <label>Employee Name</label>
-                </div>
-
-                <div class="input-box">
-                    <span class="icon" asp-validation-for="EmployeeEmail"></span>
-                    <input asp-for="EmployeeEmail" type="email" required>
-                    <label>Employee Email</label>
-                </div>
-
-                <div class="input-box">
-                    <span class="icon" asp-validation-for="EmployeePhone"></span>
-                    <input asp-for="EmployeePhone" type="text" required>
-                    <label>Phone</label>
-                </div>
-
-                <div class="input-box">
-                    <span class="icon" asp-validation-for="EmployeePassword"></span>
-                    <input asp-for="EmployeePassword" type="password" required>
-                    <label>Password</label>
-                </div>
-
-                <button type="submit" class="btn">Register</button>
-                <div class="login-register">
-                    <p>Alrady have an account ?<a href="#" class="login-link"> Login</a></p>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
+</div>
 
-    <video autoplay loop muted plays-inline class="background-video">
-        <source src="~/video/you%20have%20the%20power%20to%20protect%20your%20peace%20(1).mp4" type="video/mp4" />
-    </video>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+@section upload
+{
+    <script>
+        $(function () {
+            $('#btnUpload').click(function () {
+                $('#fileUpload').trigger('click');
+            });
+        });
+        $('#fileUpload').change(function () {
+            if (window.FormData !== undefined) {
+                var fileUpload = $('#fileUpload').get(0);
+                var files = fileUpload.files;
+                var formData = new FormData();
+                formData.append('file', files[0]);
 
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script src="~/js/Reg_log.js"></script>
-</body>
-</html>
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '@Url.Action("ProcessUpload", "Employee")',
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (urlImage) {
+                            $('#pictureUpload').attr('src', urlImage);
+                            $('#Avatar').val(urlImage);
+                        },
+                        error: function (err) {
+                            alert('Error ', err.statusText);
+                        }
+                    });
+            }
+        });
+    </script>
+}
+
+
+<style>
+    .wrapper-img {
+        border-radius: 50%;
+    }
+
+    .error-indicator::after {
+        content: "•";
+        color: red;
+        font-weight: bold;
+        margin-left: 5px;
+    }
+
+    .indicator-hidden {
+        display: none;
+    }
+
+</style>

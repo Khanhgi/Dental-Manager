@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
             deleteSelectedProducts(selectedProductIds);
             window.location.reload();
         } else {
-            console.log('No products selected.');
+            console.log('No employee selected.');
         }
     });
 
@@ -88,7 +88,7 @@ function deleteStaff(employeeId) {
 }
 
 function addStaff(employeeId) {
-    window.location.href = `/Admin/Staff/ReloadEmployee?employeeId=${employeeId}`;
+    window.location.href = `/Employee/AddEmployee?employeeId=${employeeId}`;
 }
 
 function ReloaStaff(employeeId) {
