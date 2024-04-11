@@ -1,7 +1,7 @@
 ﻿using Dental_Manager.JWT_Token;
 using Dental_Manager.Services;
 
-namespace DoAnT4n.Services
+namespace Dental_Manager.Services
 {
     public static class IServices
     {

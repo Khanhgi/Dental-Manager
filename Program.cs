@@ -1,5 +1,5 @@
 ﻿using Dental_Manager.Models;
-using DoAnT4n.Services;
+using Dental_Manager.Services;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;

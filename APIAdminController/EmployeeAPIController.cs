@@ -3,7 +3,7 @@ using Dental_Manager.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DoAnT4n.APIAdminController
+namespace Dental_Manager.APIAdminController
 {
     [ApiController]
     [Route("api/[controller]")]
