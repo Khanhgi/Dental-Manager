@@ -27,13 +27,13 @@ namespace Dental_Manager.AdminControllers
             _httpClient.BaseAddress = new Uri(ApiUrl());    
         }
 
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
+        //[HttpGet]
+        //public IActionResult Login()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
+        //[HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
             var apiUrl = "https://localhost:7044/api/EmployeeApi/login";
@@ -48,7 +48,7 @@ namespace Dental_Manager.AdminControllers
 
                 _contextAccessor.HttpContext.Session.SetString("AccessToken", token);
 
-                var staff = await _context.Employees.FirstOrDefaultAsync(c => c.EmployeeName == username);
+                var staff = await _context.Employee.FirstOrDefaultAsync(c => c.EmployeeName == username);
 
                 _contextAccessor.HttpContext.Session.SetString("Username", staff.EmployeeName);
                 if (staff.Avatar != null)
@@ -177,7 +177,7 @@ namespace Dental_Manager.AdminControllers
             {
                 return RedirectToAction("Login", "Employee"); ////////////////////////////////////////////////////
             }
-            var employee = _context.Employees
+            var employee = _context.Employee
               .Include(s => s.EmployeeScheduleDetails)
               .ThenInclude(s => s.EmployeeSchedule)
               .FirstOrDefault(s => s.EmployeeId == employeeId);
@@ -229,7 +229,7 @@ namespace Dental_Manager.AdminControllers
             {
                 try
                 {
-                    var updatedEmployee = await _context.Employees.FirstOrDefaultAsync(s => s.EmployeeId == employeeId);
+                    var updatedEmployee = await _context.Employee.FirstOrDefaultAsync(s => s.EmployeeId == employeeId);
                     if (updatedEmployee != null)
                     {
 
@@ -294,7 +294,7 @@ namespace Dental_Manager.AdminControllers
             }
             else
             {
-                var employeeList= await _context.Employees
+                var employeeList= await _context.Employee
                     .Include(s => s.Clinic)
                     .Include(s => s.RoleId)
                     .ToListAsync();

@@ -44,7 +44,7 @@ namespace Dental_Manager.Services
 
             }
 
-            var createEmployee = await _context.Employees
+            var createEmployee = await _context.Employee
                 .Include(e => e.Role)
                 .FirstOrDefaultAsync(p => p.EmployeeId == registerModel.EmployeeId || p.EmployeeName == registerModel.EmployeeName);
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerModel.EmployeePassword);
@@ -83,7 +83,7 @@ namespace Dental_Manager.Services
                 newEmployee.Clinic = clinic;
             }
 
-            _context.Employees.Add(newEmployee);
+            _context.Employee.Add(newEmployee);
             await _context.SaveChangesAsync();
 
             _context.Entry(newEmployee).Reference(c => c.Clinic).Load();
@@ -103,7 +103,7 @@ namespace Dental_Manager.Services
         }
 
 
-        public async Task<IActionResult> LoginEmployee(Employee loginModel)
+        public async Task<IActionResult> Login(Employee loginModel)
         {
             if (loginModel == null || string.IsNullOrWhiteSpace(loginModel.EmployeeName) || string.IsNullOrWhiteSpace(loginModel.EmployeePassword))
             {
@@ -114,7 +114,7 @@ namespace Dental_Manager.Services
                 return new BadRequestObjectResult(errorResponse);
             }
 
-            var employee = await _context.Employees.FirstOrDefaultAsync(c => c.EmployeeName == loginModel.EmployeeName);
+            var employee = await _context.Employee.FirstOrDefaultAsync(c => c.EmployeeName == loginModel.EmployeeName);
 
             if (employee == null)
             {
@@ -160,6 +160,7 @@ namespace Dental_Manager.Services
                 // Lấy HttpContext từ IHttpContextAccessor
                 var httpContext = _contextAccessor.HttpContext;
 
+                httpContext.Session.SetString("Username", employee.EmployeeName);
                 // Lưu thông tin vào session
                 if (employee.Avatar != null)
                 {
@@ -202,7 +203,7 @@ namespace Dental_Manager.Services
                 return new BadRequestObjectResult("Mã nhân viên không hợp lệ");
             }
 
-            var employee = await _context.Employees.FindAsync(employeeId);
+            var employee = await _context.Employee.FindAsync(employeeId);
 
             if (employee == null)
             {

@@ -21,7 +21,7 @@ namespace Dental_Manager.APIAdminController
         }
 
 
-        [HttpPut("add/{employeeId}")]
+        [HttpPut("add/{EmployeeId}")]
         public async Task<IActionResult> AddEmployeesAsync(int employeeId)
         {
             var result = await _employeeServices.AddEmployee(employeeId);
@@ -40,7 +40,7 @@ namespace Dental_Manager.APIAdminController
             }
         }
 
-        [HttpPut("update/{employeeId}")]
+        [HttpPut("update/{EmployeeId}")]
         public async Task<IActionResult> UpdateEmployeeAsync(int employeeId, Employee updateModel)
         {
             var result = await _employeeServices.UpdateEmployeeAsync(employeeId, updateModel);
@@ -59,10 +59,10 @@ namespace Dental_Manager.APIAdminController
             }
         }
 
-        [HttpDelete("delete/{employeeId}")]
+        [HttpDelete("delete/{EmployeeId}")]
         public async Task<IActionResult> DeleteEmployee(int employeeId)
         {
-            var employee = await _context.Employees.FindAsync(employeeId);
+            var employee = await _context.Employee.FindAsync(employeeId);
 
             if (employee == null)
             {
@@ -106,6 +106,19 @@ namespace Dental_Manager.APIAdminController
             }
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetEmployeeById(int id)
+        {
+            var result = await _loginEmployeeServices.GetEmployeeInfoById(id);
+            return result;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllEmployee()
+        {
+            var employee = await _employeeServices.GetAllEmployee();
+            return Ok(employee);
+        }
 
         [HttpGet("search")]
         public async Task<IActionResult> SearchEmployee(string keyword)
@@ -147,7 +160,7 @@ namespace Dental_Manager.APIAdminController
         [HttpPost("login")]
         public async Task<IActionResult> LoginEmployeeAsync(Employee loginModel)
         {
-            var result = await _loginEmployeeServices.LoginEmployee(loginModel);
+            var result = await _loginEmployeeServices.Login(loginModel);
 
             if (result is OkObjectResult okResult)
             {
@@ -161,19 +174,5 @@ namespace Dental_Manager.APIAdminController
             return StatusCode(500, "Internal Server Error");
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetEmployeeById(int id)
-        {
-            var result = await _loginEmployeeServices.GetEmployeeInfoById(id);
-            return result;
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAllEmployee()
-        {
-            var employee = await _employeeServices.GetAllEmployee();
-            return Ok(employee);
-        }
-        
     }
 }
