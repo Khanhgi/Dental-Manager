@@ -103,7 +103,7 @@ namespace Dental_Manager.Services
         }
 
 
-        public async Task<IActionResult> LoginEmployee(Employee loginModel)
+        public async Task<IActionResult> Login(Employee loginModel)
         {
             if (loginModel == null || string.IsNullOrWhiteSpace(loginModel.EmployeeName) || string.IsNullOrWhiteSpace(loginModel.EmployeePassword))
             {
@@ -160,6 +160,7 @@ namespace Dental_Manager.Services
                 // Lấy HttpContext từ IHttpContextAccessor
                 var httpContext = _contextAccessor.HttpContext;
 
+                httpContext.Session.SetString("Username", employee.EmployeeName);
                 // Lưu thông tin vào session
                 if (employee.Avatar != null)
                 {

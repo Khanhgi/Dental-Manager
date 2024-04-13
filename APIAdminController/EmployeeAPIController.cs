@@ -3,17 +3,17 @@ using Dental_Manager.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DoAnT4n.APIAdminController
+namespace Dental_Manager.APIAdminController
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class EmployeeAPIController : Controller
+    public class EmployeeApiController : Controller
     {
         private readonly QlkrContext _context;
         private readonly LoginEmployeeServices _loginEmployeeServices;
         private readonly EmployeeServices _employeeServices;
 
-        public EmployeeAPIController(QlkrContext context, LoginEmployeeServices loginEmployeeServices, EmployeeServices employeeServices)
+        public EmployeeApiController(QlkrContext context, LoginEmployeeServices loginEmployeeServices, EmployeeServices employeeServices)
         {
             _context = context;
             _loginEmployeeServices = loginEmployeeServices;
@@ -21,7 +21,7 @@ namespace DoAnT4n.APIAdminController
         }
 
 
-        [HttpPut("add/{employeeId}")]
+        [HttpPut("add/{EmployeeId}")]
         public async Task<IActionResult> AddEmployeesAsync(int employeeId)
         {
             var result = await _employeeServices.AddEmployee(employeeId);
@@ -40,7 +40,7 @@ namespace DoAnT4n.APIAdminController
             }
         }
 
-        [HttpPut("update/{employeeId}")]
+        [HttpPut("update/{EmployeeId}")]
         public async Task<IActionResult> UpdateEmployeeAsync(int employeeId, Employee updateModel)
         {
             var result = await _employeeServices.UpdateEmployeeAsync(employeeId, updateModel);
@@ -59,7 +59,7 @@ namespace DoAnT4n.APIAdminController
             }
         }
 
-        [HttpDelete("delete/{employeeId}")]
+        [HttpDelete("delete/{EmployeeId}")]
         public async Task<IActionResult> DeleteEmployee(int employeeId)
         {
             var employee = await _context.Employees.FindAsync(employeeId);
@@ -106,6 +106,19 @@ namespace DoAnT4n.APIAdminController
             }
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetEmployeeById(int id)
+        {
+            var result = await _loginEmployeeServices.GetEmployeeInfoById(id);
+            return result;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllEmployee()
+        {
+            var employee = await _employeeServices.GetAllEmployee();
+            return Ok(employee);
+        }
 
         [HttpGet("search")]
         public async Task<IActionResult> SearchEmployee(string keyword)
@@ -147,7 +160,7 @@ namespace DoAnT4n.APIAdminController
         [HttpPost("login")]
         public async Task<IActionResult> LoginEmployeeAsync(Employee loginModel)
         {
-            var result = await _loginEmployeeServices.LoginEmployee(loginModel);
+            var result = await _loginEmployeeServices.Login(loginModel);
 
             if (result is OkObjectResult okResult)
             {
@@ -161,19 +174,5 @@ namespace DoAnT4n.APIAdminController
             return StatusCode(500, "Internal Server Error");
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetEmployeeById(int id)
-        {
-            var result = await _loginEmployeeServices.GetEmployeeInfoById(id);
-            return result;
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAllEmployee()
-        {
-            var employee = await _employeeServices.GetAllEmployee();
-            return Ok(employee);
-        }
-        
     }
 }

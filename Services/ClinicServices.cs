@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DoAnT4n.Services
+namespace Dental_Manager.Services
 {
     public class ClinicServices
     {
