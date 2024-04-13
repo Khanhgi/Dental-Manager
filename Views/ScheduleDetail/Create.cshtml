@@ -1,5 +1,51 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Dental_Manager.Models.EmployeeScheduleDetail
+
 @{
+    ViewData["Title"] = "Create Schedule Detail";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+
+<h1>Create Schedule Detail</h1>
+
+<hr />
+<div class="row" style="display:flex;margin-top: 5rem;">
+    <div class="col-md-4" style="margin: auto;">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="EmployeeScheduleId" class="control-label"></label>
+                <select asp-for="EmployeeScheduleId" class="form-control" asp-items="ViewBag.EmployeeScheduleId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmployeeId" class="control-label"></label>
+                <select asp-for="EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" class="form-control" type="date" id="Date" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="EmployeeId" />
+            <input type="hidden" asp-for="EmployeeScheduleId" />
+            <input type="hidden" asp-for="Employee" />
+            <input type="hidden" asp-for="EmployeeSchedule" />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <button asp-action="Index">Back to List</button>
+</div>
+
+<script>
+    function setMinDate() {
+        var today = new Date().toISOString().split('T')[0];
+        document.getElementById('Date').min = today;
+    }
+
+    window.onload = setMinDate;
+</script>
+
+
