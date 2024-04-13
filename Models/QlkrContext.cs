@@ -118,7 +118,6 @@ public partial class QlkrContext : DbContext
         {
             entity.HasKey(e => e.EmployeeId).HasName("PK__Employee__C52E0BA81B86A6C3");
 
-            entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
             entity.Property(e => e.Avatar)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -129,24 +128,17 @@ public partial class QlkrContext : DbContext
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(255)
                 .HasColumnName("Created_by");
-            entity.Property(e => e.EmployeeAddress)
-                .HasMaxLength(255)
-                .HasColumnName("employee_address");
+            entity.Property(e => e.EmployeeAddress).HasMaxLength(255);
             entity.Property(e => e.EmployeeEmail)
                 .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("employee_email");
-            entity.Property(e => e.EmployeeName)
-                .HasMaxLength(255)
-                .HasColumnName("employee_name");
+                .IsUnicode(false);
+            entity.Property(e => e.EmployeeName).HasMaxLength(255);
             entity.Property(e => e.EmployeePassword)
                 .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("employee_password");
+                .IsUnicode(false);
             entity.Property(e => e.EmployeePhone)
                 .HasMaxLength(15)
-                .IsUnicode(false)
-                .HasColumnName("employee_phone");
+                .IsUnicode(false);
             entity.Property(e => e.LastFailedLoginAttempt).HasColumnType("datetime");
             entity.Property(e => e.RoleId).HasColumnName("Role_id");
             entity.Property(e => e.UpdatedAt)

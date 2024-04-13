@@ -17,7 +17,7 @@ namespace Dental_Manager.AdminControllers
        
         public static string ApiUrl()
         {
-            return "https://localhost:7044/api/EmployeeAPI/";
+            return "https://localhost:7044/api/EmployeeApi/";
         }
         public EmployeeController(QlkrContext context, IHttpContextAccessor contextAccessor)
         {
@@ -27,6 +27,51 @@ namespace Dental_Manager.AdminControllers
             _httpClient.BaseAddress = new Uri(ApiUrl());    
         }
 
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(string username, string password)
+        {
+            var apiUrl = "https://localhost:7044/api/EmployeeApi/login";
+            var loginModel = new Employee { EmployeeName = username, EmployeePassword = password };
+            var content = new StringContent(JsonConvert.SerializeObject(loginModel), Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(apiUrl, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var token = await response.Content.ReadAsStringAsync();
+
+                _contextAccessor.HttpContext.Session.SetString("AccessToken", token);
+
+                var staff = await _context.Employees.FirstOrDefaultAsync(c => c.EmployeeName == username);
+
+                _contextAccessor.HttpContext.Session.SetString("Username", staff.EmployeeName);
+                if (staff.Avatar != null)
+                {
+                    _contextAccessor.HttpContext.Session.SetString("Avatar", staff.Avatar);
+                }
+                _contextAccessor.HttpContext.Session.SetString("UserId", staff.EmployeeId.ToString());
+                _contextAccessor.HttpContext.Session.SetString("Role", staff.RoleId.ToString());
+
+                return Redirect("/Employee/Index");
+
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                dynamic errorResponse = JsonConvert.DeserializeObject(errorContent);
+                string errorMessage = errorResponse.message;
+                ModelState.AddModelError(string.Empty, errorMessage);
+                return View();
+            }
+        }
+
+        [HttpGet]
         public IActionResult Register()
         {
             var roles = _context.Roles.ToList();
@@ -38,10 +83,11 @@ namespace Dental_Manager.AdminControllers
             return View();
         }
 
+
         [HttpPost]
         public async Task<IActionResult> Register(Employee registerModel)
         {
-            var apiUrl = $"https://localhost:7044/api/EmployeeAPI/register";
+            var apiUrl = $"https://localhost:7044/api/EmployeeApi/register";
 
             registerModel.CreatedBy = HttpContext.Session.GetString("EmployeeName");
 
@@ -74,47 +120,10 @@ namespace Dental_Manager.AdminControllers
             }
         }
 
-        public async Task<IActionResult> Login(string username, string password)
-        {
-            var apiUrl = "https://localhost:7044/api/EmployeeAPI/login";
-            var loginModel = new Employee { EmployeeName = username, EmployeePassword = password };
-            var content = new StringContent(JsonConvert.SerializeObject(loginModel), Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PostAsync(apiUrl, content);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var token = await response.Content.ReadAsStringAsync();
-
-                _contextAccessor.HttpContext.Session.SetString("AccessToken", token);
-
-                var staff = await _context.Employees.FirstOrDefaultAsync(c => c.EmployeeName == username);
-
-                _contextAccessor.HttpContext.Session.SetString("Username", staff.EmployeeName);
-                if (staff.Avatar != null)
-                {
-                    _contextAccessor.HttpContext.Session.SetString("Avatar", staff.Avatar);
-                }
-                _contextAccessor.HttpContext.Session.SetString("UserId", staff.EmployeeId.ToString());
-                _contextAccessor.HttpContext.Session.SetString("Role", staff.RoleId.ToString());
-                _contextAccessor.HttpContext.Session.SetString("Name", staff.EmployeeName);
-
-                return RedirectToAction("Index1", "Employee");
-            }
-            else
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                dynamic errorResponse = JsonConvert.DeserializeObject(errorContent);
-                string errorMessage = errorResponse.message;
-                ModelState.AddModelError(string.Empty, errorMessage);
-                return View();
-            }
-        }
-
         [HttpGet]
         public async Task<IActionResult> AddEmployee(int employeeId)
         {
-            var apiUrl = $"https://localhost:7044/api/EmployeeAPI/add/{employeeId}";
+            var apiUrl = $"https://localhost:7044/api/EmployeeApi/add/{employeeId}";
             var response = await _httpClient.PutAsync(apiUrl, null);
 
             if (response.IsSuccessStatusCode)
@@ -141,7 +150,7 @@ namespace Dental_Manager.AdminControllers
 
                 return RedirectToAction("Index", "Employee");
             }
-            var apiUrl = $"https://localhost:7044/api/EmployeeAPI/delete/{employeeId}";
+            var apiUrl = $"https://localhost:7044/api/EmployeeApi/delete/{employeeId}";
 
             var response = await _httpClient.DeleteAsync(apiUrl);
 
@@ -166,7 +175,7 @@ namespace Dental_Manager.AdminControllers
         {
             if (HttpContext.Session.GetString("EmployeeId") == null)
             {
-                return RedirectToAction("Login", "Staff"); ////////////////////////////////////////////////////
+                return RedirectToAction("Login", "Employee"); ////////////////////////////////////////////////////
             }
             var employee = _context.Employees
               .Include(s => s.EmployeeScheduleDetails)
@@ -209,7 +218,7 @@ namespace Dental_Manager.AdminControllers
             }
             updateModel.Status = Request.Form["Status"] == "true";
 
-            var apiUrl = $"https://localhost:7044/api/EmployeeAPI/update/{employeeId}";
+            var apiUrl = $"https://localhost:7044/api/EmployeeApi/update/{employeeId}";
 
             var json = JsonConvert.SerializeObject(updateModel);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -275,7 +284,7 @@ namespace Dental_Manager.AdminControllers
 
         public async Task<IActionResult> Index()
         {
-            var apiResponse = await _httpClient.GetAsync("https://localhost:7044/api/EmployeeAPI");
+            var apiResponse = await _httpClient.GetAsync("https://localhost:7044/api/EmployeeApi");
 
             if (apiResponse.IsSuccessStatusCode)
             {

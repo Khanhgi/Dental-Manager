@@ -7,13 +7,13 @@ namespace Dental_Manager.APIAdminController
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class EmployeeAPIController : Controller
+    public class EmployeeApiController : Controller
     {
         private readonly QlkrContext _context;
         private readonly LoginEmployeeServices _loginEmployeeServices;
         private readonly EmployeeServices _employeeServices;
 
-        public EmployeeAPIController(QlkrContext context, LoginEmployeeServices loginEmployeeServices, EmployeeServices employeeServices)
+        public EmployeeApiController(QlkrContext context, LoginEmployeeServices loginEmployeeServices, EmployeeServices employeeServices)
         {
             _context = context;
             _loginEmployeeServices = loginEmployeeServices;
