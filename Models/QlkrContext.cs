@@ -19,7 +19,7 @@ public partial class QlkrContext : DbContext
 
     public virtual DbSet<Clinic> Clinics { get; set; }
 
-    public virtual DbSet<Employee> Employee { get; set; }
+    public virtual DbSet<Employee> Employees { get; set; }
 
     public virtual DbSet<EmployeeSchedule> EmployeeSchedules { get; set; }
 

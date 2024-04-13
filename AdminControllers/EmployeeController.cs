@@ -15,25 +15,25 @@ namespace Dental_Manager.AdminControllers
         private readonly QlkrContext _context;
         private readonly IHttpContextAccessor _contextAccessor;
        
-        public static string ApiUrl()
-        {
-            return "https://localhost:7044/api/EmployeeApi/";
-        }
+        //public static string ApiUrl()
+        //{
+        //    return "https://localhost:7044/api/EmployeeApi/";
+        //}
         public EmployeeController(QlkrContext context, IHttpContextAccessor contextAccessor)
         {
             _httpClient = new HttpClient();
             _context = context;
             _contextAccessor = contextAccessor;
-            _httpClient.BaseAddress = new Uri(ApiUrl());    
+            //_httpClient.BaseAddress = new Uri(ApiUrl());    
         }
 
-        //[HttpGet]
-        //public IActionResult Login()
-        //{
-        //    return View();
-        //}
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
 
-        //[HttpPost]
+        [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
             var apiUrl = "https://localhost:7044/api/EmployeeApi/login";
@@ -46,19 +46,21 @@ namespace Dental_Manager.AdminControllers
             {
                 var token = await response.Content.ReadAsStringAsync();
 
-                _contextAccessor.HttpContext.Session.SetString("AccessToken", token);
+                //_contextAccessor.HttpContext.Session.SetString("AccessToken", token);
 
-                var staff = await _context.Employee.FirstOrDefaultAsync(c => c.EmployeeName == username);
+                var employee = await _context.Employees.FirstOrDefaultAsync(c => c.EmployeeName == username);
 
-                _contextAccessor.HttpContext.Session.SetString("Username", staff.EmployeeName);
-                if (staff.Avatar != null)
-                {
-                    _contextAccessor.HttpContext.Session.SetString("Avatar", staff.Avatar);
-                }
-                _contextAccessor.HttpContext.Session.SetString("UserId", staff.EmployeeId.ToString());
-                _contextAccessor.HttpContext.Session.SetString("Role", staff.RoleId.ToString());
+                //_contextAccessor.HttpContext.Session.SetString("Username", employee.EmployeeName);
+                //if (employee.Avatar != null)
+                //{
+                //    _contextAccessor.HttpContext.Session.SetString("Avatar", employee.Avatar);
+                //}
+                //_contextAccessor.HttpContext.Session.SetString("UserId", employee.EmployeeId.ToString());
+                //_contextAccessor.HttpContext.Session.SetString("Role", employee.RoleId.ToString());
+                //_contextAccessor.HttpContext.Session.SetString("Name", employee.EmployeeName);
 
-                return Redirect("/Employee/Index");
+
+                return RedirectToAction("Index", "Employee");
 
             }
             else
@@ -177,7 +179,7 @@ namespace Dental_Manager.AdminControllers
             {
                 return RedirectToAction("Login", "Employee"); ////////////////////////////////////////////////////
             }
-            var employee = _context.Employee
+            var employee = _context.Employees
               .Include(s => s.EmployeeScheduleDetails)
               .ThenInclude(s => s.EmployeeSchedule)
               .FirstOrDefault(s => s.EmployeeId == employeeId);
@@ -229,7 +231,7 @@ namespace Dental_Manager.AdminControllers
             {
                 try
                 {
-                    var updatedEmployee = await _context.Employee.FirstOrDefaultAsync(s => s.EmployeeId == employeeId);
+                    var updatedEmployee = await _context.Employees.FirstOrDefaultAsync(s => s.EmployeeId == employeeId);
                     if (updatedEmployee != null)
                     {
 
@@ -294,7 +296,7 @@ namespace Dental_Manager.AdminControllers
             }
             else
             {
-                var employeeList= await _context.Employee
+                var employeeList= await _context.Employees
                     .Include(s => s.Clinic)
                     .Include(s => s.RoleId)
                     .ToListAsync();

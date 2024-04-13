@@ -62,7 +62,7 @@ namespace Dental_Manager.APIAdminController
         [HttpDelete("delete/{EmployeeId}")]
         public async Task<IActionResult> DeleteEmployee(int employeeId)
         {
-            var employee = await _context.Employee.FindAsync(employeeId);
+            var employee = await _context.Employees.FindAsync(employeeId);
 
             if (employee == null)
             {

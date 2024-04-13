@@ -53,7 +53,7 @@ namespace Dental_Manager.APIAdminController
                 var registrationSuccessResponse = new
                 {
                     Message = "Schedules registration successful",
-                    ScheduleId = newSchedule.EmployeeScheduleId
+                    EmployeeScheduleId = newSchedule.EmployeeScheduleId
                 };
                 return Ok(registrationSuccessResponse);
             }
@@ -71,9 +71,9 @@ namespace Dental_Manager.APIAdminController
 
 
         [HttpPut("update/{EmployeeScheduleId}")]
-        public async Task<IActionResult> UpdateSchedul(int ScheduleId, EmployeeSchedule updateModel)
+        public async Task<IActionResult> UpdateSchedul(int EmployeeScheduleId, EmployeeSchedule updateModel)
         {
-            var Schedule = await _qlkrContext.EmployeeSchedules.FindAsync(ScheduleId);
+            var Schedule = await _qlkrContext.EmployeeSchedules.FindAsync(EmployeeScheduleId);
             if (Schedule == null)
             {
                 return NotFound();
@@ -96,9 +96,9 @@ namespace Dental_Manager.APIAdminController
 
 
         [HttpDelete("delete/{EmployeeScheduleId}")]
-        public async Task<IActionResult> DeleteSchedule(int ScheduleId)
+        public async Task<IActionResult> DeleteSchedule(int EmployeeScheduleId)
         {
-            var Schedules = await _qlkrContext.EmployeeSchedules.FindAsync(ScheduleId);
+            var Schedules = await _qlkrContext.EmployeeSchedules.FindAsync(EmployeeScheduleId);
             if (Schedules == null)
             {
                 return NotFound();
@@ -117,16 +117,16 @@ namespace Dental_Manager.APIAdminController
 
 
         [HttpGet("detail/{EmployeeScheduleId}")]
-        public async Task<IActionResult> GetScheduleDetail(int ScheduleId)
+        public async Task<IActionResult> GetScheduleDetail(int EmployeeScheduleId)
         {
-            var schedule = await _qlkrContext.EmployeeSchedules.FindAsync(ScheduleId);
+            var schedule = await _qlkrContext.EmployeeSchedules.FindAsync(EmployeeScheduleId);
             if (schedule == null)
             {
                 return NotFound();
             }
             var scheduleDetail = new
             {
-                ScheduleId = schedule.EmployeeScheduleId,
+                EmployeeScheduleId = schedule.EmployeeScheduleId,
                 Time = schedule.Time.ToString()
             };
 

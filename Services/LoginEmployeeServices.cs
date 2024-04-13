@@ -44,7 +44,7 @@ namespace Dental_Manager.Services
 
             }
 
-            var createEmployee = await _context.Employee
+            var createEmployee = await _context.Employees
                 .Include(e => e.Role)
                 .FirstOrDefaultAsync(p => p.EmployeeId == registerModel.EmployeeId || p.EmployeeName == registerModel.EmployeeName);
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerModel.EmployeePassword);
@@ -83,7 +83,7 @@ namespace Dental_Manager.Services
                 newEmployee.Clinic = clinic;
             }
 
-            _context.Employee.Add(newEmployee);
+            _context.Employees.Add(newEmployee);
             await _context.SaveChangesAsync();
 
             _context.Entry(newEmployee).Reference(c => c.Clinic).Load();
@@ -114,7 +114,7 @@ namespace Dental_Manager.Services
                 return new BadRequestObjectResult(errorResponse);
             }
 
-            var employee = await _context.Employee.FirstOrDefaultAsync(c => c.EmployeeName == loginModel.EmployeeName);
+            var employee = await _context.Employees.FirstOrDefaultAsync(c => c.EmployeeName == loginModel.EmployeeName);
 
             if (employee == null)
             {
@@ -203,7 +203,7 @@ namespace Dental_Manager.Services
                 return new BadRequestObjectResult("Mã nhân viên không hợp lệ");
             }
 
-            var employee = await _context.Employee.FindAsync(employeeId);
+            var employee = await _context.Employees.FindAsync(employeeId);
 
             if (employee == null)
             {

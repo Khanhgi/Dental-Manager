@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Dental_Manager.Models.EmployeeSchedule>
+
+@{
+    ViewData["Title"] = "Employee Schedule";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="wrapper-box" style="padding:1rem">
+    <div class="toolBar-control">
+        <button class="btn-create" onclick="window.location.href='/Schedule/Create'">
+            Create new
+        </button>
+       @*  <div class="wrap-search">
+            <div class="search-staff">
+                <div class="box-search">
+                    <input type="text" value="" name="" id="" placeholder="Search Schedule ... ">
+                    <button class="btnSearch-staff">Search</button>
+                </div>
+            </div>
+        </div> *@
+        <div></div>
+    </div>
+    <div class="table-infoStaff">
+        <table class="table-List">
+            <tr class="title-infoList">
+                <th>Schedule ID</th>
+                <th>Time</th>
+                <th>Action</th>
+            </tr>
+            <tbody class="box-tbody">
+                @foreach (var item in Model)
+                {
+                    <tr class="item-infoList">
+                        <td>@item.EmployeeScheduleId</td>
+                        <td>@item.Time</td>
+                        <td>
+                            <button class="btn-edit" onclick="navigateTo('Edit', @item.EmployeeScheduleId)">
+                                Edit
+                            </button>
+@*                             <button class="btn-detail" onclick="navigateTo('Detail', @item.EmployeeScheduleId)">
+                                Detail
+                            </button> *@
+                            <button class="btn-delete" onclick="deleteSchedule(@item.EmployeeScheduleId)">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    function navigateTo(action, EmployeeScheduleId) {
+        window.location.href = `/Schedule/${action}?EmployeeScheduleId=${EmployeeScheduleId}`;
+    }
+
+    function deleteSchedule(EmployeeScheduleId) {
+        if (confirm('Are you sure you want to delete this Schedule?')) {
+            navigateTo('Delete', EmployeeScheduleId);
+        }
+    }
+</script>

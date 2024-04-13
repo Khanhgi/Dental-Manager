@@ -19,7 +19,7 @@ namespace Dental_Manager.Services
         //Cập nhật nhân viên
         public async Task<IActionResult> UpdateEmployeeAsync(int EmployeeId, Employee updateModel)
         {
-            var employee = await _context.Employee.FirstOrDefaultAsync(e => e.EmployeeId == EmployeeId);
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.EmployeeId == EmployeeId);
 
             if (employee == null)
             {
@@ -61,7 +61,7 @@ namespace Dental_Manager.Services
         //Tìm kiếm nhân viên
         public async Task<List<object>> SearchEmployee(string keyword)
         {
-            var employees = await _context.Employee
+            var employees = await _context.Employees
                 .Include(p => p.Clinic)
                 .Include(p => p.Role)
                 .Where(p => p.EmployeeName.Contains(keyword) || p.EmployeeId.ToString() == keyword)
@@ -90,7 +90,7 @@ namespace Dental_Manager.Services
 
         public async Task<List<object>> GetAllEmployee()
         {
-            var employee = await _context.Employee.Include(l => l.Clinic).Include(l => l.Role).ToListAsync();
+            var employee = await _context.Employees.Include(l => l.Clinic).Include(l => l.Role).ToListAsync();
 
             return employee.Select(l => new
             {
@@ -116,7 +116,7 @@ namespace Dental_Manager.Services
         [HttpDelete("delete/{employeeId}")]
         public async Task<IActionResult> DeleteEmployee(int employeeId)
         {
-            var employee = await _context.Employee.FindAsync(employeeId);
+            var employee = await _context.Employees.FindAsync(employeeId);
 
             if (employee == null)
             {
@@ -138,7 +138,7 @@ namespace Dental_Manager.Services
         [HttpPut("add/{employeeId}")]
         public async Task<IActionResult> AddEmployee(int employeeId)
         {
-            var employee = await _context.Employee.FirstOrDefaultAsync(e => e.EmployeeId == employeeId);
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.EmployeeId == employeeId);
 
             if (employee == null)
             {
