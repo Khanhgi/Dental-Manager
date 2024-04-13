@@ -7,19 +7,23 @@ public partial class Patient
 {
     public int PatientId { get; set; }
 
-    public string PatientName { get; set; } = null!;
+    public string PatientPassword { get; set; } = null!;
 
-    public string PatientPhone { get; set; } = null!;
+    public string? PatientName { get; set; }
 
-    public string PatientEmail { get; set; } = null!;
+    public string? PatientPhone { get; set; }
 
-    public string PatientAddress { get; set; } = null!;
+    public string? PatientEmail { get; set; }
 
-    public int RoleId { get; set; }
+    public string? PatientAddress { get; set; }
+
+    public int? RoleId { get; set; }
+
+    public bool? Status { get; set; }
 
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 
     public virtual ICollection<MedicalHistory> MedicalHistories { get; set; } = new List<MedicalHistory>();
 
-    public virtual Role Role { get; set; } = null!;
+    public virtual Role? Role { get; set; }
 }

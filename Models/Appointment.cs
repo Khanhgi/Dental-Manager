@@ -7,25 +7,31 @@ public partial class Appointment
 {
     public int AppointmentId { get; set; }
 
-    public int EmployeeId { get; set; }
+    public int? EmployeeId { get; set; }
 
-    public int PatientId { get; set; }
+    public int? PatientId { get; set; }
 
-    public DateTime AppointmentDate { get; set; }
+    public int? ClinicId { get; set; }
 
-    public TimeSpan AppointmentTime { get; set; }
+    public string? Name { get; set; }
 
-    public int ClinicId { get; set; }
+    public string? Phone { get; set; }
 
-    public virtual Clinic Clinic { get; set; } = null!;
+    public DateTime? AppointmentDate { get; set; }
 
-    public virtual Employee Employee { get; set; } = null!;
+    public bool? Status { get; set; }
 
-    public virtual Patient Patient { get; set; } = null!;
+    public DateTime? AppointmentCreatedDate { get; set; }
+
+    public bool? IsBooking { get; set; }
+
+    public virtual ICollection<AppointmentDetail> AppointmentDetails { get; set; } = new List<AppointmentDetail>();
+
+    public virtual Clinic? Clinic { get; set; }
+
+    public virtual Employee? Employee { get; set; }
+
+    public virtual Patient? Patient { get; set; }
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
-
-    public virtual ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
-
-    public virtual ICollection<Service> Services { get; set; } = new List<Service>();
 }

@@ -17,6 +17,8 @@ public partial class QlkrContext : DbContext
 
     public virtual DbSet<Appointment> Appointments { get; set; }
 
+    public virtual DbSet<AppointmentDetail> AppointmentDetails { get; set; }
+
     public virtual DbSet<Clinic> Clinics { get; set; }
 
     public virtual DbSet<Employee> Employees { get; set; }
@@ -30,8 +32,6 @@ public partial class QlkrContext : DbContext
     public virtual DbSet<Patient> Patients { get; set; }
 
     public virtual DbSet<Payment> Payments { get; set; }
-
-    public virtual DbSet<Prescription> Prescriptions { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
 
@@ -52,47 +52,50 @@ public partial class QlkrContext : DbContext
             entity.ToTable("Appointment");
 
             entity.Property(e => e.AppointmentId).HasColumnName("appointment_id");
+            entity.Property(e => e.AppointmentCreatedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("appointment_created_date");
             entity.Property(e => e.AppointmentDate)
-                .HasColumnType("date")
+                .HasColumnType("datetime")
                 .HasColumnName("appointment_date");
-            entity.Property(e => e.AppointmentTime).HasColumnName("appointment_time");
             entity.Property(e => e.ClinicId).HasColumnName("clinic_id");
             entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
+            entity.Property(e => e.IsBooking).HasColumnName("isBooking");
+            entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.PatientId).HasColumnName("patient_id");
+            entity.Property(e => e.Phone)
+                .HasMaxLength(10)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.Clinic).WithMany(p => p.Appointments)
                 .HasForeignKey(d => d.ClinicId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Appointme__clini__48CFD27E");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.Appointments)
                 .HasForeignKey(d => d.EmployeeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Appointment_Employees");
 
             entity.HasOne(d => d.Patient).WithMany(p => p.Appointments)
                 .HasForeignKey(d => d.PatientId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Appointme__patie__4AB81AF0");
+        });
 
-            entity.HasMany(d => d.Services).WithMany(p => p.Appointments)
-                .UsingEntity<Dictionary<string, object>>(
-                    "AppointmentDetail",
-                    r => r.HasOne<Service>().WithMany()
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Appointme__servi__4CA06362"),
-                    l => l.HasOne<Appointment>().WithMany()
-                        .HasForeignKey("AppointmentId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Appointme__appoi__4BAC3F29"),
-                    j =>
-                    {
-                        j.HasKey("AppointmentId", "ServiceId").HasName("PK__Appointm__46E8F376B3F9AEAB");
-                        j.ToTable("AppointmentDetails");
-                        j.IndexerProperty<int>("AppointmentId").HasColumnName("appointment_id");
-                        j.IndexerProperty<int>("ServiceId").HasColumnName("service_id");
-                    });
+        modelBuilder.Entity<AppointmentDetail>(entity =>
+        {
+            entity.HasKey(e => new { e.AppointmentId, e.ServiceId }).HasName("PK__Appointm__46E8F376B3F9AEAB");
+
+            entity.Property(e => e.AppointmentId).HasColumnName("appointment_id");
+            entity.Property(e => e.ServiceId).HasColumnName("service_id");
+
+            entity.HasOne(d => d.Appointment).WithMany(p => p.AppointmentDetails)
+                .HasForeignKey(d => d.AppointmentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Appointme__appoi__4BAC3F29");
+
+            entity.HasOne(d => d.Service).WithMany(p => p.AppointmentDetails)
+                .HasForeignKey(d => d.ServiceId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Appointme__servi__4CA06362");
         });
 
         modelBuilder.Entity<Clinic>(entity =>
@@ -118,6 +121,7 @@ public partial class QlkrContext : DbContext
         {
             entity.HasKey(e => e.EmployeeId).HasName("PK__Employee__C52E0BA81B86A6C3");
 
+            entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
             entity.Property(e => e.Avatar)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -128,17 +132,24 @@ public partial class QlkrContext : DbContext
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(255)
                 .HasColumnName("Created_by");
-            entity.Property(e => e.EmployeeAddress).HasMaxLength(255);
+            entity.Property(e => e.EmployeeAddress)
+                .HasMaxLength(255)
+                .HasColumnName("employee_address");
             entity.Property(e => e.EmployeeEmail)
                 .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.EmployeeName).HasMaxLength(255);
+                .IsUnicode(false)
+                .HasColumnName("employee_email");
+            entity.Property(e => e.EmployeeName)
+                .HasMaxLength(255)
+                .HasColumnName("employee_name");
             entity.Property(e => e.EmployeePassword)
                 .HasMaxLength(255)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasColumnName("employee_password");
             entity.Property(e => e.EmployeePhone)
                 .HasMaxLength(15)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasColumnName("employee_phone");
             entity.Property(e => e.LastFailedLoginAttempt).HasColumnType("datetime");
             entity.Property(e => e.RoleId).HasColumnName("Role_id");
             entity.Property(e => e.UpdatedAt)
@@ -210,7 +221,6 @@ public partial class QlkrContext : DbContext
             entity.Property(e => e.PatientId).HasColumnName("patient_id");
             entity.Property(e => e.PatientAddress)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("patient_address");
             entity.Property(e => e.PatientEmail)
                 .HasMaxLength(255)
@@ -218,8 +228,11 @@ public partial class QlkrContext : DbContext
                 .HasColumnName("patient_email");
             entity.Property(e => e.PatientName)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("patient_name");
+            entity.Property(e => e.PatientPassword)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("patient_password");
             entity.Property(e => e.PatientPhone)
                 .HasMaxLength(15)
                 .IsUnicode(false)
@@ -228,7 +241,6 @@ public partial class QlkrContext : DbContext
 
             entity.HasOne(d => d.Role).WithMany(p => p.Patients)
                 .HasForeignKey(d => d.RoleId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Patients_Role");
         });
 
@@ -249,22 +261,6 @@ public partial class QlkrContext : DbContext
                 .HasForeignKey(d => d.AppointmentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Payments__appoin__4F7CD00D");
-        });
-
-        modelBuilder.Entity<Prescription>(entity =>
-        {
-            entity.HasKey(e => e.PrescriptionId).HasName("PK__Prescrip__3EE444F859D3D418");
-
-            entity.Property(e => e.PrescriptionId).HasColumnName("prescription_id");
-            entity.Property(e => e.AppointmentId).HasColumnName("appointment_id");
-            entity.Property(e => e.PrescriptionDetails)
-                .HasColumnType("text")
-                .HasColumnName("prescription_details");
-
-            entity.HasOne(d => d.Appointment).WithMany(p => p.Prescriptions)
-                .HasForeignKey(d => d.AppointmentId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Prescript__appoi__5070F446");
         });
 
         modelBuilder.Entity<Role>(entity =>
