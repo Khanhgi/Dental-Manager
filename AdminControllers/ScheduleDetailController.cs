@@ -187,7 +187,7 @@ namespace Dental_Manager.AdminControllers
                 }
                 else
                 {
-                    return NotFound("Staff or Schedule not found.");
+                    return NotFound("Employee or Schedule not found.");
                 }
             }
             catch (Exception ex)
