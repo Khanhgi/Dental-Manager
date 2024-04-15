@@ -115,7 +115,7 @@ namespace Dental_Manager.ClientApiController
                 var passwordHasher = new PasswordHasher<Patient>();
                 var hashedPassword = passwordHasher.HashPassword(null, registrationModel.PatientPassword);
 
-                int defaultRoleId = 3;
+                int defaultRoleId = 4;
 
                 var role = await _context.Roles.FindAsync(defaultRoleId);
 

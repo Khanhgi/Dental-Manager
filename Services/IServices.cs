@@ -1,4 +1,6 @@
 ﻿using Dental_Manager.JWT_Token;
+using Dental_Manager.PatientApiController.Mail;
+using Dental_Manager.PatientApiController.Services;
 using Dental_Manager.Services;
 
 namespace Dental_Manager.Services
@@ -13,6 +15,8 @@ namespace Dental_Manager.Services
             services.AddScoped<LoginEmployeeServices>();
             //services.AddScoped<DoctorServices>();
             services.AddScoped<ClinicServices>();
+            services.AddScoped<AppoinmentServices>();
+            services.AddScoped<SendMail>();
             return services;
         }
     }

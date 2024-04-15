@@ -38,6 +38,7 @@ namespace Dental_Manager.APIAdminController
 
                 Clinic = s.Clinic != null ? new
                 {
+                    s.Clinic.ClinicName,
                     s.Clinic.ClinicAddress,
                     s.Clinic.ClinicPhone
                 } : null,

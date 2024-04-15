@@ -62,7 +62,7 @@ namespace Dental_Manager.Services
         {
             var ClinicUpdate = await _context.Clinics.FirstOrDefaultAsync(x => x.ClinicId == ClinicId);
 
-            if(ClinicUpdate != null)
+            if (ClinicUpdate != null)
             {
                 return new NotFoundObjectResult("Not found Clinic");
             }

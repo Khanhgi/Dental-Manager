@@ -46,7 +46,7 @@ namespace Dental_Manager.PatientApiController.Mail
                                     <td style=""padding: 5px; background-color: white;"">
                                         <table width=""100%"">
                                             <tr>
-                                                <h3 style=""font-family: 'Roboto Condensed', sans-serif; font-size: 28px; text-align: center; color: #c89800;"">CUSTOMER INFORMATION</h3>
+                                                <h3 style=""font-family: 'Roboto Condensed', sans-serif; font-size: 28px; text-align: center; color: #c89800;"">PATIENT INFORMATION</h3>
                                                 <td class=""two-cols"" style=""padding: 0 0 0;"">
                                                     <table style=""width: 100%; max-width: 242px; display: inline-block; vertical-align: top;"" class=""col"">
                                                         <tr>
@@ -67,7 +67,7 @@ namespace Dental_Manager.PatientApiController.Mail
                                                                 <table style=""border-spacing: 0; font-size: 0;"" class=""content"">
                                                                     <tr>
                                                                         <p style=""font-family: 'Roboto Condensed', sans-serif; font-size: 16px; color: #4a4a4a;""><strong>Notes:</strong> {registrationModel.Note}</p>
-                                                                        <p style=""font-family: 'Roboto Condensed', sans-serif; font-size: 16px; color: #4a4a4a;""><strong>Branch:</strong> {branch?.ClinicAddress}</p>
+                                                                        <p style=""font-family: 'Roboto Condensed', sans-serif; font-size: 16px; color: #4a4a4a;""><strong>Clinic:</strong> {branch?.ClinicAddress}</p>
                                                                     </tr>
                                                                 </table>
                                                             </td>
@@ -133,7 +133,7 @@ namespace Dental_Manager.PatientApiController.Mail
                                     <td style=""padding: 5px; background-color: white;"">
                                         <table width=""100%"">
                                             <tr>
-                                                <h3 style=""font-family: 'Roboto Condensed', sans-serif; font-size: 28px; text-align: center; color: #c89800; text-transform: uppercase;"">you have a customer booking</h3>
+                                                <h3 style=""font-family: 'Roboto Condensed', sans-serif; font-size: 28px; text-align: center; color: #c89800; text-transform: uppercase;"">you have a patient booking</h3>
                                                 <td class=""two-cols"" style=""padding: 0 0 0;"">
                                                     <table style=""width: 100%; max-width: 242px; display: inline-block; vertical-align: top;"" class=""col"">
                                                         <tr>
@@ -154,7 +154,7 @@ namespace Dental_Manager.PatientApiController.Mail
                                                                 <table style=""border-spacing: 0; font-size: 0;"" class=""content"">
                                                                     <tr>
                                                                         <p style=""font-family: 'Roboto Condensed', sans-serif; font-size: 16px; color: #4a4a4a;""><strong>Notes:</strong> {registrationModel.Note}</p>
-                                                                        <p style=""font-family: 'Roboto Condensed', sans-serif; font-size: 16px; color: #4a4a4a;""><strong>Branch:</strong> {branch?.ClinicAddress}</p>
+                                                                        <p style=""font-family: 'Roboto Condensed', sans-serif; font-size: 16px; color: #4a4a4a;""><strong>Clinic:</strong> {branch?.ClinicAddress}</p>
                                                                     </tr>
                                                                 </table>
                                                             </td>
