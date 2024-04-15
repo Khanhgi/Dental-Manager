@@ -62,6 +62,7 @@ public partial class QlkrContext : DbContext
             entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
             entity.Property(e => e.IsBooking).HasColumnName("isBooking");
             entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Note).HasMaxLength(255);
             entity.Property(e => e.PatientId).HasColumnName("patient_id");
             entity.Property(e => e.Phone)
                 .HasMaxLength(10)

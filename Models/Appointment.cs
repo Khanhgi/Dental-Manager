@@ -17,6 +17,8 @@ public partial class Appointment
 
     public string? Phone { get; set; }
 
+    public string? Note { get; set; }
+
     public DateTime? AppointmentDate { get; set; }
 
     public bool? Status { get; set; }
