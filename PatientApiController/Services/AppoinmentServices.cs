@@ -1,18 +1,19 @@
 ﻿using Dental_Manager.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Dental_Manager.PatientApiController.Mail;
 
 namespace Dental_Manager.PatientApiController.Services
 {
-    public class BookingServices
+    public class AppoinmentServices
     {
         private readonly QlkrContext _qlkrContext;
-        //private readonly SendEmail _sendEmail;
+        private readonly SendMail _sendMail;
 
-        public BookingServices(QlkrContext qlkrContext)
+        public AppoinmentServices(QlkrContext qlkrContext, SendMail sendMail)
         {
             _qlkrContext = qlkrContext;
-            //_sendMail = sendMail;
+            _sendMail = sendMail;
         }
 
         public async Task<IActionResult> CreateBooking([FromBody] Appointment registrationModel)
@@ -58,12 +59,12 @@ namespace Dental_Manager.PatientApiController.Services
                 _qlkrContext.Appointments.Add(newBooking);
                 await _qlkrContext.SaveChangesAsync();
 
-                //_sendMail.SendBookingNotificationEmail(employee.Email, registrationModel);
+                _sendMail.SendAppoinmentNotificationEmail(employee.EmployeeEmail, registrationModel);
 
 
                 if (patient != null)
                 {
-                    //_sendMail.SendBookingConfirmationEmail(patient.Email, registrationModel);
+                    _sendMail.SendAppoinmentConfirmationEmail(patient.PatientEmail, registrationModel);
                 }
 
                 var registrationSuccessResponse = new
