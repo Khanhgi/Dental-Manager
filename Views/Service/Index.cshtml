@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Dental_Manager.Models.Service>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="wrapper-box" style="padding:7rem">
+    <div class="toolBar-control">
+        <button class="btn-create" onclick="window.location.href='/Service/create'">
+            Create new
+        </button>
+
+        <div></div>
+    </div>
+    <div class="table-infoStaff">
+        <table class="table-List">
+            <tr class="title-infoList">
+                <th>Service ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Service Type</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+
+            <tbody class="box-tbody">
+                @foreach (var item in Model)
+                {
+                    <tr class="item-infoList">
+                        <td>@item.ServiceId</td>
+                        <td>@item.ServiceName</td>
+                        <td>@item.ServicePrice</td>
+                        <td>@item.ServiceType.Name</td>
+                        <td>
+                            @if (item.ServiceStatus == true)
+                            {
+                                <p style="color: green">Active</p>
+                            }
+                            else
+                            {
+                                <p style="color: red">Non-Active</p>
+                            }
+                        </td>
+                        <td>
+                            <button class="btn-edit" onclick="navigateTo('Edit', @item.ServiceId)">
+                                Edit
+                            </button>
+                            <button class="btn-delete" onclick="deleteService(@item.ServiceId)">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    function navigateTo(action, ServiceId) {
+        window.location.href = `/Service/${action}?ServiceId=${ServiceId}`;
+    }
+
+    function deleteService(ServiceId) {
+        if (confirm('Are you sure you want to delete this service?')) {
+            navigateTo('Delete', ServiceId);
+        }
+    }
+</script>

@@ -64,7 +64,6 @@
                     }
                     </td>*@
                             <td>
-                                <button onclick="edit('@item.EmployeeScheduleId', '@item.EmployeeId')" class="btn-edit">Edit</button>
                                 <button onclick="deleteItem('@item.EmployeeScheduleId', '@item.EmployeeId')" class="btn-delete">Delete</button>
                             </td>
                         </tr>
@@ -77,13 +76,9 @@
 
 <script>
 
-    function edit(scheduleId, employeeId) {
-        window.location.href = '/ScheduleDetail/Edit?ScheduleId=' + scheduleId + '&EmployeeId=' + employeeId;
-    }
 
-    // function details(scheduleId, employeeId) {
-    //     window.location.href = '/ScheduleDetail/Details?ScheduleId=' + scheduleId + '&EmployeeId=' + employeeId;
-    // }
+
+
 
     function deleteItem(scheduleId, employeeId) {
         if (confirm('Are you sure you want to delete this schedule?')) {

@@ -36,26 +36,26 @@ namespace Dental_Manager.APIAdminController
                 s.AppointmentCreatedDate,
                 s.ClinicId,
 
-                Clinic = s.Clinic != null ? new
+                Clinic = new
                 {
-                    s.Clinic.ClinicName,
-                    s.Clinic.ClinicAddress,
-                    s.Clinic.ClinicPhone
-                } : null,
+                    BranchId = s.Clinic?.ClinicId,
+                    Address = s.Clinic?.ClinicAddress,
+                    Hotline = s.Clinic?.ClinicPhone,
+                },
 
-                Patient = s.Patient != null ? new
+                Patient = new
                 {
-                    s.Patient.PatientName,
-                    s.Patient.PatientId
-                } : null,
-
-                Employee = s.Employee != null ? new
+                    s.Patient?.PatientName,
+                    s.Patient?.PatientId
+                },
+                
+                Employee = new
                 {
-                    s.Employee.EmployeeName,
-                    s.Employee.EmployeeId
-                } : null
+                    s.Employee?.EmployeeName,
+                    s.Employee?.EmployeeId
+                }
 
-            }).ToList();
+            }).Cast<object>().ToList();
 
             return Ok(bookingFromClientsWithFullInfo);
         }

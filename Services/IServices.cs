@@ -2,6 +2,7 @@
 using Dental_Manager.PatientApiController.Mail;
 using Dental_Manager.PatientApiController.Services;
 using Dental_Manager.Services;
+using System.Reflection.Metadata;
 
 namespace Dental_Manager.Services
 {
@@ -15,6 +16,7 @@ namespace Dental_Manager.Services
             services.AddScoped<GenerateToken>();
             services.AddScoped<LoginEmployeeServices>();
             services.AddScoped<ClinicServices>();
+            services.AddScoped<ServiceTypeServices>();
 
             //Patient
             services.AddScoped<AppoinmentServices>();

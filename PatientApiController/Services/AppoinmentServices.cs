@@ -20,32 +20,34 @@ namespace Dental_Manager.PatientApiController.Services
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(registrationModel.Phone) || string.IsNullOrWhiteSpace(registrationModel.Name))
+                if (registrationModel.PatientId == 0 || registrationModel.EmployeeId == 0 || registrationModel.ClinicId == 0)
                 {
                     var errorResponse = new
                     {
-                        Message = "Info cannot be empty"
+                        Message = "PatientId, EmployeeId, and ClinicId are required fields."
                     };
 
                     return new BadRequestObjectResult(errorResponse);
                 }
 
+
                 var patient = await _qlkrContext.Patients.FindAsync(registrationModel.PatientId);
                 var employee = await _qlkrContext.Employees.FindAsync(registrationModel.EmployeeId);
                 var clinic = await _qlkrContext.Clinics.FindAsync(registrationModel.ClinicId);
 
-                if (employee == null || clinic == null)
+                if (patient == null || employee == null || clinic == null)
                 {
                     var Check = new List<string>();
+                    if (patient == null) Check.Add("Patient");
                     if (employee == null) Check.Add("Employee");
                     if (clinic == null) Check.Add("Clinic");
 
-                    return new NotFoundObjectResult($"Missing: {string.Join(", ", Check)}.");
+                    return new NotFoundObjectResult($"Thieu tp nay: {string.Join(", ", Check)}.");
                 }
 
                 var existingBooking = await _qlkrContext.Appointments
-                 .FirstOrDefaultAsync(b => b.EmployeeId == registrationModel.EmployeeId &&
-                              b.AppointmentDate == registrationModel.AppointmentDate);
+                    .FirstOrDefaultAsync(b => b.EmployeeId == registrationModel.EmployeeId &&
+                                              b.AppointmentDate == registrationModel.AppointmentDate);
 
                 if (existingBooking != null)
                 {
@@ -67,30 +69,29 @@ namespace Dental_Manager.PatientApiController.Services
 
                         _qlkrContext.Appointments.Add(newBooking);
                         await _qlkrContext.SaveChangesAsync();
-                        _sendMail.SendAppoinmentNotificationEmail(employee.EmployeeEmail, registrationModel);
+                     //   _sendMail.SendAppoinmentNotificationEmail(staff.EmployeeEmail, registrationModel);
 
 
                         if (patient != null)
                         {
-                            _sendMail.SendAppoinmentConfirmationEmail(patient.PatientEmail, registrationModel);
+                          //  _sendMail.SendAppoinmentConfirmationEmail(client.PatientEmail, registrationModel);
                         }
-
                         var registrationSuccessResponse = new
                         {
                             Message = "Registration successful",
-                            AppointmentId = newBooking.AppointmentId,
-                            PatientId = newBooking.PatientId,
-
+                            BookingId = newBooking.AppointmentId,
+                            ClientId = newBooking.PatientId,
+                            
                             Employee = new
                             {
                                 EmployeeId = newBooking.Employee?.EmployeeId,
                                 Name = newBooking.Employee?.EmployeeName,
                                 Phone = newBooking.Employee?.EmployeePhone,
                             },
-
+                            
                             Clinic = new
                             {
-                                ClinicId = newBooking.Clinic?.ClinicId,
+                                BranchId = newBooking.Clinic?.ClinicId,
                                 Address = newBooking.Clinic?.ClinicAddress,
                                 Hotline = newBooking.Clinic?.ClinicPhone
                             },
@@ -110,6 +111,7 @@ namespace Dental_Manager.PatientApiController.Services
                         return new BadRequestObjectResult("Nhân viên đã được đặt vào thời gian này.");
                     }
                 }
+
                 else
                 {
                     var scheduleDetails = await _qlkrContext.EmployeeScheduleDetails
@@ -133,30 +135,29 @@ namespace Dental_Manager.PatientApiController.Services
 
                         _qlkrContext.Appointments.Add(newBooking);
                         await _qlkrContext.SaveChangesAsync();
-                        _sendMail.SendAppoinmentNotificationEmail(employee.EmployeeEmail, registrationModel);
+                        //_sendMail.SendAppoinmentNotificationEmail(staff.EmployeeEmail, registrationModel);
 
 
                         if (patient != null)
                         {
-                            _sendMail.SendAppoinmentConfirmationEmail(patient.PatientEmail, registrationModel);
+                           // _sendMail.SendAppoinmentConfirmationEmail(client.PatientEmail, registrationModel);
                         }
-
                         var registrationSuccessResponse = new
                         {
                             Message = "Registration successful",
-                            AppointmentId = newBooking.AppointmentId,
-                            PatientId = newBooking.PatientId,
+                            BookingId = newBooking.AppointmentId,
+                            ClientId = newBooking.PatientId,
 
                             Employee = new
                             {
-                                EmployeeId = newBooking.Employee?.EmployeeId,
+                                StaffId = newBooking.Employee?.EmployeeId,
                                 Name = newBooking.Employee?.EmployeeName,
                                 Phone = newBooking.Employee?.EmployeePhone,
                             },
 
                             Clinic = new
                             {
-                                ClinicId = newBooking.Clinic?.ClinicId,
+                                BranchId = newBooking.Clinic?.ClinicId,
                                 Address = newBooking.Clinic?.ClinicAddress,
                                 Hotline = newBooking.Clinic?.ClinicPhone
                             },
@@ -182,6 +183,7 @@ namespace Dental_Manager.PatientApiController.Services
             {
                 return new ObjectResult($"An error occurred: {ex.Message}") { StatusCode = 500 };
             }
+
         }
 
         public async Task<List<object>> GetAllAppointment()

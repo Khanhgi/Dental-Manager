@@ -13,8 +13,11 @@
     <div class="col-md-4">
         <form asp-action="Edit" asp-controller="ScheduleDetail" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="EmployeeScheduleId" />
-            <input type="hidden" asp-for="EmployeeId" />
+           @*  <input type="hidden" asp-for="EmployeeScheduleId" />
+            <input type="hidden" asp-for="EmployeeId" /> *@
+            <input type="hidden" name="scheduleId" value="@ViewBag.ScheduleId" />
+            <input type="hidden" name="employeeId" value="@ViewBag.EmployeeId" />
+
 
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>

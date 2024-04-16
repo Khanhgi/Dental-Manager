@@ -120,20 +120,20 @@ namespace Dental_Manager.APIAdminController
             return Ok(employee);
         }
 
-        [HttpGet("search")]
-        public async Task<IActionResult> SearchEmployee(string keyword)
-        {
-            var result = await _employeeServices.SearchEmployee(keyword);
+        //[HttpGet("search")]
+        //public async Task<IActionResult> SearchEmployee(string keyword)
+        //{
+        //    var result = await _employeeServices.SearchEmployee(keyword);
 
-            if (result != null)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return BadRequest("Invalid search result.");
-            }
-        }
+        //    if (result != null)
+        //    {
+        //        return Ok(result);
+        //    }
+        //    else
+        //    {
+        //        return BadRequest("Invalid search result.");
+        //    }
+        //}
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterEmployeeAsync(Employee registerModel)

@@ -57,37 +57,6 @@ namespace Dental_Manager.Services
             return new OkObjectResult(updateSuccessResponse);
         }
 
-
-        //Tìm kiếm nhân viên
-        public async Task<List<object>> SearchEmployee(string keyword)
-        {
-            var employees = await _context.Employees
-                .Include(p => p.Clinic)
-                .Include(p => p.Role)
-                .Where(p => p.EmployeeName.Contains(keyword) || p.EmployeeId.ToString() == keyword)
-                .ToListAsync();
-
-            var employeeInfo = employees.Select(p => (object)new
-            {
-                p.EmployeeId,
-                p.EmployeeName,
-                p.EmployeeEmail,
-                p.EmployeePhone,
-                Role = new
-                {
-                    Role = p.Role.RoleId,
-                    Name = p.Role.Name
-                },
-                Clinic = new
-                {
-                    Name = p.Clinic.ClinicName,
-                    Address = p.Clinic.ClinicAddress
-                }
-            }).ToList();
-
-            return employeeInfo;
-        }
-
         public async Task<List<object>> GetAllEmployee()
         {
             var employee = await _context.Employees.Include(l => l.Clinic).Include(l => l.Role).ToListAsync();

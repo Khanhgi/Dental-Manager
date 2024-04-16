@@ -28,10 +28,10 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
-{
-    builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
-}));
+//builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
+//{
+//    builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
+//}));
 
 
 var app = builder.Build();
@@ -45,7 +45,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseCors("corsapp");
+//app.UseCors("corsapp");
 app.UseRouting();
 app.UseSession();
 app.UseAuthorization();

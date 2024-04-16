@@ -146,12 +146,12 @@ namespace Dental_Manager.AdminControllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int scheduleId, int employeeId, EmployeeScheduleDetail updatedModel)
+        public async Task<IActionResult> Edit(EmployeeScheduleDetail updatedModel)
         {
             try
             {
-                updatedModel.EmployeeId = employeeId;
-                updatedModel.EmployeeScheduleId = scheduleId;
+                var scheduleId = updatedModel.EmployeeScheduleId;
+                var employeeId = updatedModel.EmployeeId;
 
                 var employee = await qlkr.Employees.FindAsync(employeeId);
                 var schedule = await qlkr.EmployeeSchedules.FindAsync(scheduleId);

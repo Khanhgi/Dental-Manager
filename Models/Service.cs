@@ -15,14 +15,6 @@ public partial class Service
 
     public bool? ServiceStatus { get; set; }
 
-    public DateTime? CreatedAt { get; set; }
-
-    public int? CreatedBy { get; set; }
-
-    public DateTime? UpdatedAt { get; set; }
-
-    public int? UpdatedBy { get; set; }
-
     public virtual ICollection<AppointmentDetail> AppointmentDetails { get; set; } = new List<AppointmentDetail>();
 
     public virtual ServiceType ServiceType { get; set; } = null!;

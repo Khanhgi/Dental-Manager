@@ -103,7 +103,7 @@ public partial class QlkrContext : DbContext
             entity.HasOne(d => d.Service).WithMany(p => p.AppointmentDetails)
                 .HasForeignKey(d => d.ServiceId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_AppointmentDetails_Services");
+                .HasConstraintName("FK_AppointmentDetails_Service");
         });
 
         modelBuilder.Entity<Clinic>(entity =>
@@ -276,27 +276,20 @@ public partial class QlkrContext : DbContext
 
         modelBuilder.Entity<Service>(entity =>
         {
+            entity.ToTable("Service");
+
             entity.Property(e => e.ServiceId).HasColumnName("service_id");
-            entity.Property(e => e.CreatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("Created_at");
-            entity.Property(e => e.CreatedBy).HasColumnName("Created_by");
             entity.Property(e => e.ServiceName)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("service_name");
             entity.Property(e => e.ServicePrice).HasColumnName("service_price");
             entity.Property(e => e.ServiceStatus).HasColumnName("service_status");
             entity.Property(e => e.ServiceTypeId).HasColumnName("Service_type_id");
-            entity.Property(e => e.UpdatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("Updated_at");
-            entity.Property(e => e.UpdatedBy).HasColumnName("Updated_by");
 
             entity.HasOne(d => d.ServiceType).WithMany(p => p.Services)
                 .HasForeignKey(d => d.ServiceTypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Services_Services");
+                .HasConstraintName("FK_Service_ServiceType");
         });
 
         modelBuilder.Entity<ServiceType>(entity =>
