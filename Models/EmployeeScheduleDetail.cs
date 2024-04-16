@@ -13,7 +13,7 @@ public partial class EmployeeScheduleDetail
 
     public bool? Status { get; set; }
 
-    public virtual Employee Employee { get; set; } = null!;
+    public virtual Employee? Employee { get; set; } = null!;
 
-    public virtual EmployeeSchedule EmployeeSchedule { get; set; } = null!;
+    public virtual EmployeeSchedule? EmployeeSchedule { get; set; } = null!;
 }

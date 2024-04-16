@@ -20,15 +20,16 @@ namespace Dental_Manager.PatientApiController.Services
         {
             try
             {
-                if (registrationModel.PatientId == 0 || registrationModel.EmployeeId == 0 || registrationModel.ClinicId == 0)
+                if (string.IsNullOrWhiteSpace(registrationModel.Phone) || string.IsNullOrWhiteSpace(registrationModel.Name))
                 {
                     var errorResponse = new
                     {
-                        Message = "PatientId, EmployeeId, and ClinicId are required fields."
+                        Message = "Info cannot be empty"
                     };
 
                     return new BadRequestObjectResult(errorResponse);
                 }
+
 
 
                 var patient = await _qlkrContext.Patients.FindAsync(registrationModel.PatientId);
@@ -69,12 +70,12 @@ namespace Dental_Manager.PatientApiController.Services
 
                         _qlkrContext.Appointments.Add(newBooking);
                         await _qlkrContext.SaveChangesAsync();
-                     //   _sendMail.SendAppoinmentNotificationEmail(staff.EmployeeEmail, registrationModel);
+                        _sendMail.SendAppoinmentNotificationEmail(employee.EmployeeEmail, registrationModel);
 
 
                         if (patient != null)
                         {
-                          //  _sendMail.SendAppoinmentConfirmationEmail(client.PatientEmail, registrationModel);
+                            _sendMail.SendAppoinmentConfirmationEmail(patient.PatientEmail, registrationModel);
                         }
                         var registrationSuccessResponse = new
                         {
@@ -108,7 +109,7 @@ namespace Dental_Manager.PatientApiController.Services
                     }
                     else
                     {
-                        return new BadRequestObjectResult("Nhân viên đã được đặt vào thời gian này.");
+                        return new BadRequestObjectResult("Có nha sĩ đã được đặt vào thời gian này.");
                     }
                 }
 
@@ -135,12 +136,12 @@ namespace Dental_Manager.PatientApiController.Services
 
                         _qlkrContext.Appointments.Add(newBooking);
                         await _qlkrContext.SaveChangesAsync();
-                        //_sendMail.SendAppoinmentNotificationEmail(staff.EmployeeEmail, registrationModel);
+                        _sendMail.SendAppoinmentNotificationEmail(employee.EmployeeEmail, registrationModel);
 
 
                         if (patient != null)
                         {
-                           // _sendMail.SendAppoinmentConfirmationEmail(client.PatientEmail, registrationModel);
+                            _sendMail.SendAppoinmentConfirmationEmail(patient.PatientEmail, registrationModel);
                         }
                         var registrationSuccessResponse = new
                         {
@@ -174,7 +175,7 @@ namespace Dental_Manager.PatientApiController.Services
                     }
                     else
                     {
-                        return new BadRequestObjectResult("Nhân viên không có lịch làm việc vào thời gian này.");
+                        return new BadRequestObjectResult("Không có nha sĩ nào có lịch làm việc vào thời gian này.");
                     }
                 }
 

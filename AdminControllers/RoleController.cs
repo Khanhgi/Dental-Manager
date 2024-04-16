@@ -1,66 +1,24 @@
 ﻿using Dental_Manager.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace Dental_Manager.AdminControllers
 {
-    public class ServiceTypeController : Controller
+    public class RoleController : Controller
     {
         QlkrContext qlkr = new QlkrContext();
         private readonly HttpClient _httpClient;
 
-        public ServiceTypeController()
+        public RoleController()
         {
             _httpClient = new HttpClient();
         }
 
-        public async Task<IActionResult> Index()
-        {
-
-            var apiResponse = await _httpClient.GetAsync($"https://localhost:7044/ServiceTypeApi");
-            if (apiResponse.IsSuccessStatusCode)
-            {
-                var responseContent = await apiResponse.Content.ReadAsStringAsync();
-                var ServicesType = JsonConvert.DeserializeObject<List<ServiceType>>(responseContent);
-
-                return View(ServicesType);
-            }
-            else
-            {
-                var ServicesType = await qlkr.ServiceTypes
-                   .ToListAsync();
-                return View(ServicesType);
-            }
-        }
-
-        public IActionResult Create()
-        {
-            var model = new ServiceType();
-            return View(model);
-        }
-
         [HttpPost]
-        public async Task<IActionResult> Create(ServiceType registrationModel)
+        public async Task<IActionResult> Create(Role registrationModel)
         {
-            var apiUrl = $"https://localhost:7044/api/ServiceTypeApi/create";
-            var serviceName = registrationModel.Name?.Trim();
-            var checkSer = qlkr.ServiceTypes.FirstOrDefault(x => x.Name == serviceName);
-            if (checkSer != null)
-            {
-                ModelState.AddModelError("Name", "Servicetypes with this name already exists.");
-                return View(registrationModel);
-            }
-            if (string.IsNullOrEmpty(registrationModel.Name))
-            {
-                ModelState.AddModelError("Name", "Name cannot be empty.");
-            }
-            if (!ModelState.IsValid)
-            {
-                var model = new ServiceType();
-                return View(registrationModel);
-            }
+            var apiUrl = "https://localhost:7044/api/RoleApi/create";
 
             var json = JsonConvert.SerializeObject(registrationModel);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -79,36 +37,31 @@ namespace Dental_Manager.AdminControllers
 
                 var errorResponse = JsonConvert.DeserializeObject<object>(responseContent);
 
-                if (errorResponse != null)
-                {
-                    ModelState.AddModelError("", errorResponse.ToString());
-                }
-
+                ModelState.AddModelError("", errorResponse.ToString());
                 return View(registrationModel);
             }
         }
 
         [HttpGet]
-        public IActionResult Edit(int Servicetypeid)
+        public IActionResult Edit(int RoleId)
         {
-
-            var Servicetype = qlkr.ServiceTypes.Find(Servicetypeid);
-            if (Servicetype == null)
+            var Role = qlkr.Roles.Find(RoleId);
+            if (Role == null)
             {
                 return NotFound();
             }
-            return View(Servicetype);
+            return View(Role);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int Servicetypeid, ServiceType updateModel)
+        public async Task<IActionResult> Edit(int RoleId, Role updateModel)
         {
             if (!ModelState.IsValid)
             {
                 return View(updateModel);
             }
 
-            var apiUrl = $"https://localhost:7044/api/ServiceTypeApi/update/{Servicetypeid}";
+            var apiUrl = $"https://localhost:7044/api/RoleApi/update/{RoleId}";
 
             var json = JsonConvert.SerializeObject(updateModel);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -131,9 +84,9 @@ namespace Dental_Manager.AdminControllers
             }
         }
 
-        public async Task<IActionResult> Delete(int Servicetypeid)
+        public async Task<IActionResult> Delete(int RoleId)
         {
-            var apiUrl = $"https://localhost:7044/api/ServiceTypeApi/delete/{Servicetypeid}";
+            var apiUrl = $"https://localhost:7109/api/RoleApi/delete/{RoleId}";
 
             var response = await _httpClient.DeleteAsync(apiUrl);
 
@@ -152,6 +105,9 @@ namespace Dental_Manager.AdminControllers
                 return RedirectToAction("Index");
             }
         }
-
+        public IActionResult Index()
+        {
+            return View();
+        }
     }
 }

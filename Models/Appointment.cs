@@ -29,9 +29,9 @@ public partial class Appointment
 
     public virtual ICollection<AppointmentDetail> AppointmentDetails { get; set; } = new List<AppointmentDetail>();
 
-    public virtual Clinic Clinic { get; set; } = null!;
+    public virtual Clinic? Clinic { get; set; } = null!;
 
-    public virtual Employee Employee { get; set; } = null!;
+    public virtual Employee? Employee { get; set; } = null!;
 
-    public virtual Patient Patient { get; set; } = null!;
+    public virtual Patient? Patient { get; set; } = null!;
 }

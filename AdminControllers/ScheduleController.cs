@@ -159,31 +159,6 @@ namespace Dental_Manager.AdminControllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Detail(int EmployeeScheduleId)
-        {
-            //if (HttpContext.Session.GetString("UserId") == null)
-            //{
-            //    HttpContext.Session.SetString("ReturnUrl", Url.Action("Detail", "Schedule", new { scheduleId }));
-
-            //    return RedirectToAction("Login", "Employee");
-            //}
-            var apiUrl = $"https://localhost:7044/api/ScheduleApi/detail/{EmployeeScheduleId}";
-
-            var apiResponse = await _httpClient.GetAsync(apiUrl);
-            if (apiResponse.IsSuccessStatusCode)
-            {
-                var responseContent = await apiResponse.Content.ReadAsStringAsync();
-                var ScheduleDetail = JsonConvert.DeserializeObject<EmployeeSchedule>(responseContent);
-
-                return View(ScheduleDetail);
-            }
-            else
-            {
-                return RedirectToAction("Index");
-            }
-        }
-
         public async Task<IActionResult> Index()
         {
 

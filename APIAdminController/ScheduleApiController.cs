@@ -52,7 +52,7 @@ namespace Dental_Manager.APIAdminController
 
                 var registrationSuccessResponse = new
                 {
-                    Message = "Schedules registration successful",
+                    Message = "Schedules created successfully",
                     EmployeeScheduleId = newSchedule.EmployeeScheduleId
                 };
                 return Ok(registrationSuccessResponse);
@@ -114,24 +114,7 @@ namespace Dental_Manager.APIAdminController
 
             return Ok(deleteSuccessResponse);
         }
-
-
-        [HttpGet("detail/{EmployeeScheduleId}")]
-        public async Task<IActionResult> GetScheduleDetail(int EmployeeScheduleId)
-        {
-            var schedule = await _qlkrContext.EmployeeSchedules.FindAsync(EmployeeScheduleId);
-            if (schedule == null)
-            {
-                return NotFound();
-            }
-            var scheduleDetail = new
-            {
-                EmployeeScheduleId = schedule.EmployeeScheduleId,
-                Time = schedule.Time.ToString()
-            };
-
-            return Ok(scheduleDetail);
-        }
+       
 
     }
 }

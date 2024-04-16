@@ -17,5 +17,5 @@ public partial class Service
 
     public virtual ICollection<AppointmentDetail> AppointmentDetails { get; set; } = new List<AppointmentDetail>();
 
-    public virtual ServiceType ServiceType { get; set; } = null!;
+    public virtual ServiceType? ServiceType { get; set; } = null!;
 }

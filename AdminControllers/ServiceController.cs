@@ -19,7 +19,7 @@ namespace Dental_Manager.AdminControllers
 
         public async Task<IActionResult> Index()
         {
-            var apiResponse = await _httpClient.GetAsync($"https://localhost:7044/ServiceApi");
+            var apiResponse = await _httpClient.GetAsync($"https://localhost:7044/api/ServiceApi");
             if (apiResponse.IsSuccessStatusCode)
             {
                 var responseContent = await apiResponse.Content.ReadAsStringAsync();
@@ -46,7 +46,7 @@ namespace Dental_Manager.AdminControllers
         [HttpPost]
         public async Task<IActionResult> Create(Service registrationModel)
         {
-            var apiUrl = $"https://localhost:7044/ServiceApi/create";
+            var apiUrl = $"https://localhost:7044/api/ServiceApi/create";
 
             if (string.IsNullOrEmpty(registrationModel.ServiceName) && string.IsNullOrEmpty(registrationModel.ServicePrice.ToString()))
             {
@@ -137,7 +137,7 @@ namespace Dental_Manager.AdminControllers
             }
             updateModel.ServiceStatus = Request.Form["ServiceStatus"] == "true";
 
-            var apiUrl = $"https://localhost:7044/ServiceApi/update/{serviceId}";
+            var apiUrl = $"https://localhost:7044/api/ServiceApi/update/{serviceId}";
 
             var json = JsonConvert.SerializeObject(updateModel);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -176,7 +176,7 @@ namespace Dental_Manager.AdminControllers
         public async Task<IActionResult> Delete(int serviceId)
         {
 
-            var apiUrl = $"https://localhost:7044/ServiceApi/delete/{serviceId}";
+            var apiUrl = $"https://localhost:7044/api/ServiceApi/delete/{serviceId}";
 
             var response = await _httpClient.DeleteAsync(apiUrl);
 
