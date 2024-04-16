@@ -63,7 +63,7 @@ namespace Dental_Manager.PatientApiController
         }
 
         [HttpGet("clinics")]
-        public async Task<IActionResult> GetBranches()
+        public async Task<IActionResult> GetClinics()
         {
             var BranchesFullInfo = await _appoinmentServices.GetClinics();
 

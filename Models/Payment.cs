@@ -12,6 +12,4 @@ public partial class Payment
     public decimal PaymentAmount { get; set; }
 
     public DateTime PaymentDate { get; set; }
-
-    public virtual Appointment Appointment { get; set; } = null!;
 }

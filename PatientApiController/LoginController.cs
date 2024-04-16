@@ -24,7 +24,7 @@ namespace Dental_Manager.ClientApiController
             {
                 var errorResponse = new
                 {
-                    Message = "Username and password cannot be empty"
+                    Message = "Name or password cannot be empty"
                 };
                 return BadRequest(errorResponse);
             }
@@ -59,7 +59,7 @@ namespace Dental_Manager.ClientApiController
 
             var invalidLoginErrorResponse = new
             {
-                Message = "wrong pass or usenmae",
+                Message = "wrong pass or name",
                 Errors = new List<string>
                 {
                     "Invalid password"
