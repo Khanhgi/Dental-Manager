@@ -9,13 +9,16 @@ namespace Dental_Manager.Services
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
+            //Admin
             services.AddHttpContextAccessor();
             services.AddScoped<EmployeeServices>();
             services.AddScoped<GenerateToken>();
             services.AddScoped<LoginEmployeeServices>();
-            //services.AddScoped<DoctorServices>();
             services.AddScoped<ClinicServices>();
+
+            //Patient
             services.AddScoped<AppoinmentServices>();
+            services.AddScoped<AppoinmentDateServices>();
             services.AddScoped<SendMail>();
             return services;
         }

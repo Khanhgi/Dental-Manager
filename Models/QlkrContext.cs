@@ -90,7 +90,7 @@ public partial class QlkrContext : DbContext
             entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
             entity.Property(e => e.ServiceId).HasColumnName("service_id");
 
-            entity.HasOne(d => d.EmployeeSchedule).WithMany(p => p.AppointmentDetails)
+            entity.HasOne(d => d.Appointment).WithMany(p => p.AppointmentDetails)
                 .HasForeignKey(d => d.AppointmentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_AppointmentDetails_Appointment");

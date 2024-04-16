@@ -13,7 +13,7 @@ public partial class AppointmentDetail
 
     public double Price { get; set; }
 
-    public virtual Appointment EmployeeSchedule { get; set; } = null!;
+    public virtual Appointment Appointment { get; set; } = null!;
 
     public virtual Employee Employee { get; set; } = null!;
 

@@ -39,6 +39,7 @@ namespace Dental_Manager.PatientApiController.Services
                     return new NotFoundObjectResult($"Không tìm thấy thông tin cho nhân viên có ID: {employeeId}");
                 }
 
+
                 // Lấy lịch làm việc của nhân viên
                 var schedule = await _qlkrContext.EmployeeScheduleDetails
                     .Include(sd => sd.EmployeeSchedule)

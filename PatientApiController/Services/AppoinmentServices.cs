@@ -24,7 +24,7 @@ namespace Dental_Manager.PatientApiController.Services
                 {
                     var errorResponse = new
                     {
-                        Message = "info cannot be empty"
+                        Message = "Info cannot be empty"
                     };
 
                     return new BadRequestObjectResult(errorResponse);
@@ -40,62 +40,143 @@ namespace Dental_Manager.PatientApiController.Services
                     if (employee == null) Check.Add("Employee");
                     if (clinic == null) Check.Add("Clinic");
 
-                    return new NotFoundObjectResult($"Thieu tp nay: {string.Join(", ", Check)}.");
+                    return new NotFoundObjectResult($"Missing: {string.Join(", ", Check)}.");
                 }
 
-                var newBooking = new Appointment
+                var existingBooking = await _qlkrContext.Appointments
+                 .FirstOrDefaultAsync(b => b.EmployeeId == registrationModel.EmployeeId &&
+                              b.AppointmentDate == registrationModel.AppointmentDate);
+
+                if (existingBooking != null)
                 {
-                    Patient = patient,
-                    Employee = employee,
-                    Clinic = clinic,
-                    Name = registrationModel.Name,
-                    Phone = registrationModel.Phone,
-                    AppointmentDate = registrationModel.AppointmentDate,
-                    Note = registrationModel.Note,
-                    Status = registrationModel.Status,
-                    AppointmentCreatedDate = DateTime.Now
-                };
+                    if (registrationModel.IsBooking == false) // nếu isBoooking == false thì cho phép user book tiếp nhân viên đó
 
-                _qlkrContext.Appointments.Add(newBooking);
-                await _qlkrContext.SaveChangesAsync();
+                    {
+                        var newBooking = new Appointment
+                        {
+                            Patient = patient,
+                            Employee = employee,
+                            Clinic = clinic,
+                            Name = registrationModel.Name,
+                            Phone = registrationModel.Phone,
+                            AppointmentDate = registrationModel.AppointmentDate,
+                            Note = registrationModel.Note,
+                            Status = registrationModel.Status,
+                            AppointmentCreatedDate = DateTime.Now
+                        };
 
-                _sendMail.SendAppoinmentNotificationEmail(employee.EmployeeEmail, registrationModel);
+                        _qlkrContext.Appointments.Add(newBooking);
+                        await _qlkrContext.SaveChangesAsync();
+                        _sendMail.SendAppoinmentNotificationEmail(employee.EmployeeEmail, registrationModel);
 
 
-                if (patient != null)
+                        if (patient != null)
+                        {
+                            _sendMail.SendAppoinmentConfirmationEmail(patient.PatientEmail, registrationModel);
+                        }
+
+                        var registrationSuccessResponse = new
+                        {
+                            Message = "Registration successful",
+                            AppointmentId = newBooking.AppointmentId,
+                            PatientId = newBooking.PatientId,
+
+                            Employee = new
+                            {
+                                EmployeeId = newBooking.Employee?.EmployeeId,
+                                Name = newBooking.Employee?.EmployeeName,
+                                Phone = newBooking.Employee?.EmployeePhone,
+                            },
+
+                            Clinic = new
+                            {
+                                ClinicId = newBooking.Clinic?.ClinicId,
+                                Address = newBooking.Clinic?.ClinicAddress,
+                                Hotline = newBooking.Clinic?.ClinicPhone
+                            },
+
+                            Name = registrationModel.Name,
+                            Phone = registrationModel.Phone,
+                            DateTime = registrationModel.AppointmentDate,
+                            Note = registrationModel.Note,
+                            Status = registrationModel.Status,
+                            CreatedAt = newBooking.AppointmentCreatedDate,
+                        };
+
+                        return new OkObjectResult(registrationSuccessResponse);
+                    }
+                    else
+                    {
+                        return new BadRequestObjectResult("Nhân viên đã được đặt vào thời gian này.");
+                    }
+                }
+                else
                 {
-                    _sendMail.SendAppoinmentConfirmationEmail(patient.PatientEmail, registrationModel);
+                    var scheduleDetails = await _qlkrContext.EmployeeScheduleDetails
+                                .AnyAsync(sd => sd.EmployeeId == registrationModel.EmployeeId &&
+                               sd.Date == registrationModel.AppointmentDate);
+
+                    if (scheduleDetails)
+                    {
+                        var newBooking = new Appointment
+                        {
+                            Patient = patient,
+                            Employee = employee,
+                            Clinic = clinic,
+                            Name = registrationModel.Name,
+                            Phone = registrationModel.Phone,
+                            AppointmentDate = registrationModel.AppointmentDate,
+                            Note = registrationModel.Note,
+                            Status = registrationModel.Status,
+                            AppointmentCreatedDate = DateTime.Now
+                        };
+
+                        _qlkrContext.Appointments.Add(newBooking);
+                        await _qlkrContext.SaveChangesAsync();
+                        _sendMail.SendAppoinmentNotificationEmail(employee.EmployeeEmail, registrationModel);
+
+
+                        if (patient != null)
+                        {
+                            _sendMail.SendAppoinmentConfirmationEmail(patient.PatientEmail, registrationModel);
+                        }
+
+                        var registrationSuccessResponse = new
+                        {
+                            Message = "Registration successful",
+                            AppointmentId = newBooking.AppointmentId,
+                            PatientId = newBooking.PatientId,
+
+                            Employee = new
+                            {
+                                EmployeeId = newBooking.Employee?.EmployeeId,
+                                Name = newBooking.Employee?.EmployeeName,
+                                Phone = newBooking.Employee?.EmployeePhone,
+                            },
+
+                            Clinic = new
+                            {
+                                ClinicId = newBooking.Clinic?.ClinicId,
+                                Address = newBooking.Clinic?.ClinicAddress,
+                                Hotline = newBooking.Clinic?.ClinicPhone
+                            },
+
+                            Name = registrationModel.Name,
+                            Phone = registrationModel.Phone,
+                            DateTime = registrationModel.AppointmentDate,
+                            Note = registrationModel.Note,
+                            Status = registrationModel.Status,
+                            CreatedAt = newBooking.AppointmentCreatedDate,
+                        };
+
+                        return new OkObjectResult(registrationSuccessResponse);
+                    }
+                    else
+                    {
+                        return new BadRequestObjectResult("Nhân viên không có lịch làm việc vào thời gian này.");
+                    }
                 }
 
-                var registrationSuccessResponse = new
-                {
-                    Message = "Registration successful",
-                    AppointmentId = newBooking.AppointmentId,
-                    PatientId = newBooking.PatientId,
-                    
-                    Employee = new
-                    {
-                        EmployeeId = newBooking.Employee?.EmployeeId,
-                        Name = newBooking.Employee?.EmployeeName,
-                        Phone = newBooking.Employee?.EmployeePhone,
-                    },
-                   
-                    Clinic = new
-                    {
-                        ClinicId = newBooking.Clinic?.ClinicId,
-                        Address = newBooking.Clinic?.ClinicAddress,
-                        Hotline = newBooking.Clinic?.ClinicPhone
-                    },
-
-                    Name = registrationModel.Name,
-                    Phone = registrationModel.Phone,
-                    DateTime = registrationModel.AppointmentDate,
-                    Note = registrationModel.Note,
-                    Status = registrationModel.Status,
-                    CreatedAt = newBooking.AppointmentCreatedDate,
-                };
-
-                return new OkObjectResult(registrationSuccessResponse);
             }
             catch (Exception ex)
             {
