@@ -52,7 +52,7 @@ namespace Dental_Manager.PatientApiController.Services
 
                 if (existingBooking != null)
                 {
-                    if (registrationModel.IsBooking == false) // nếu isBoooking == false thì cho phép user book tiếp nhân viên đó
+                    if (registrationModel.IsBooking == false) // nếu isBoooking == false thì cho phép patient book tiếp nha sĩ đó
 
                     {
                         var newBooking = new Appointment
